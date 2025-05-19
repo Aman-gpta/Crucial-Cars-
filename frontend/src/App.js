@@ -2,6 +2,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
+// Auth Context
+import { AuthProvider } from './context/AuthContext';
+
 // Layout Components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -22,11 +25,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-    <Router>
-      {/* Main layout structure */}
-      <div className="flex flex-col min-h-screen">
-        <Navbar /> {/* Navbar appears on all pages */}
-        <main className="flex-grow container mx-auto px-4 py-8">
+    <AuthProvider>
+      <Router>
+        {/* Main layout structure */}
+        <div className="flex flex-col min-h-screen">
+          <Navbar /> {/* Navbar appears on all pages */}
+          <main className="flex-grow container mx-auto px-4 py-8">
           {/* Define application routes */}
           <Routes>
             {/* --- Public Routes --- */}
@@ -96,6 +100,7 @@ function App() {
         <Footer /> {/* Footer appears on all pages */}
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

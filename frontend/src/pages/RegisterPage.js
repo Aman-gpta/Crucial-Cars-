@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Import useAuth hook
+import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 
 // Optional: Import a spinner component if you have one
 // import Spinner from '../components/layout/Spinner';
@@ -171,9 +172,21 @@ const RegisterPage = () => {
                             className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 transition duration-150 ease-in-out"
                         >
                             Register
-                        </button>
-                    </div>
+                        </button>                    </div>
                 </form>
+
+                {/* --- Divider --- */}
+                <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-3 bg-white text-gray-500">Or</span>
+                    </div>
+                </div>
+
+                {/* --- Google Sign-In --- */}
+                {role && <GoogleSignInButton role={role} />}
 
                 {/* --- Link to Login Page --- */}
                 <div className="mt-6 text-center text-sm">

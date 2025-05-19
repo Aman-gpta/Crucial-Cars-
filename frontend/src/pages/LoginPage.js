@@ -2,9 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom'; // Import routing hooks
 import { useAuth } from '../context/AuthContext'; // Import custom hook for Auth Context
-import { auth, googleProvider } from '../firebase'; // Import Firebase auth config
-import { signInWithPopup } from 'firebase/auth';
- // <-- Check this path
+import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 
 // Optional: Import a spinner component if you have one
 // import Spinner from '../components/layout/Spinner';
@@ -45,9 +43,7 @@ const LoginPage = () => {
             const redirectPath = '/'; // Redirect to home page for now
             navigate(redirectPath);
         }
-    }, [userInfo, navigate]); // Runs when userInfo or navigate changes
-
-    // --- Event Handlers ---
+    }, [userInfo, navigate]); // Runs when userInfo or navigate changes    // --- Event Handlers ---
 
     // Handle standard email/password form submission
     const handleEmailPasswordLogin = async (e) => {
@@ -59,45 +55,6 @@ const LoginPage = () => {
             // navigate('/'); // Or navigate directly here if preferred
         }
         // Error display is handled by rendering {authError}
-    };
-
-    // Handle Google Sign-In button click
-    const handleGoogleSignIn = async () => {
-        // Ensure a role is selected, as this is needed if it's a new user signing up via Google
-        if (!selectedRole) {
-            setAuthError('Please select a role (Car Owner or Journalist) before signing in with Google.');
-            return;
-        }
-        setAuthError(null); // Clear previous errors
-
-        try {
-            // 1. Trigger Firebase Google Sign-In Popup
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            // 2. Get the Firebase ID Token from the signed-in user
-            const idToken = await user.getIdToken();
-
-            // 3. Call the context function to authenticate with your backend using the Firebase token
-            const success = await loginWithFirebase(idToken, selectedRole);
-
-            if (success) {
-                // Navigation is handled by the useEffect hook watching userInfo
-                // navigate('/'); // Or navigate directly here if preferred
-            }
-            // Error display is handled by rendering {authError}
-
-        } catch (err) {
-            // Handle errors specifically from the Firebase popup flow
-            console.error("Firebase Popup/Auth Error:", err);
-            let errorMessage = 'An error occurred during Google sign-in.';
-            if (err.code === 'auth/popup-closed-by-user') {
-                errorMessage = 'Google Sign-in cancelled.';
-            } else if (err.message) {
-                errorMessage = err.message;
-            }
-            setAuthError(errorMessage); // Set the error in the context
-        }
     };
 
     // --- Render ---
@@ -180,9 +137,7 @@ const LoginPage = () => {
                     <div className="relative flex justify-center text-sm">
                         <span className="px-3 bg-white text-gray-500">Or</span>
                     </div>
-                </div>
-
-                {/* --- Google Sign-In Section --- */}
+                </div>                {/* --- Google Sign-In Section --- */}
                 <div className="space-y-4">
                     <div> {/* Encapsulate role select */}
                         <label htmlFor="role-select" className="block text-sm font-medium text-gray-700 mb-1">
@@ -202,16 +157,7 @@ const LoginPage = () => {
                     </div>
 
                     {/* Google Sign-In Button */}
-                    <button
-                        onClick={handleGoogleSignIn}
-                        disabled={isLoading || !selectedRole} // Disable if loading or no role selected
-                        type="button" // Important: type="button" prevents submitting the email form
-                        className="w-full flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 transition duration-150 ease-in-out"
-                    >
-                        {/* Simple SVG Google Icon */}
-                        <svg className="w-5 h-5 mr-3" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 109.8 512 0 402.2 0 261.8 0 120.5 109.8 8.8 244 8.8c77.7 0 142.5 31.4 190.6 78.6l-71.1 68.6C332.6 124.2 291.1 104 244 104c-69.9 0 -126.6 56-126.6 126.4s56.6 126.4 126.6 126.4c77.5 0 103.8-48.6 108.2-72.6H244v-89.4h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
-                        {isLoading ? 'Processing...' : 'Sign in with Google'}
-                    </button>
+                    {selectedRole && <GoogleSignInButton role={selectedRole} />}
                 </div>
 
                 {/* --- Link to Register Page --- */}
