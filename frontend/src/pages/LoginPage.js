@@ -158,6 +158,11 @@ const LoginPage = () => {
 
                     {/* Google Sign-In Button */}
                     {selectedRole && <GoogleSignInButton role={selectedRole} />}
+                    {!selectedRole && (
+                        <p className="text-sm text-gray-500 text-center">
+                            Please select a role above to enable Google Sign-In
+                        </p>
+                    )}
                 </div>
 
                 {/* --- Link to Register Page --- */}

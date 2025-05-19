@@ -173,9 +173,7 @@ const RegisterPage = () => {
                         >
                             Register
                         </button>                    </div>
-                </form>
-
-                {/* --- Divider --- */}
+                </form>                {/* --- Divider --- */}
                 <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300" />
@@ -186,7 +184,12 @@ const RegisterPage = () => {
                 </div>
 
                 {/* --- Google Sign-In --- */}
-                {role && <GoogleSignInButton role={role} />}
+                <div className="space-y-4">
+                    <p className="text-center text-sm font-medium text-gray-700 mb-2">
+                        Sign up with Google using your selected role
+                    </p>
+                    {role && <GoogleSignInButton role={role} />}
+                </div>
 
                 {/* --- Link to Login Page --- */}
                 <div className="mt-6 text-center text-sm">
