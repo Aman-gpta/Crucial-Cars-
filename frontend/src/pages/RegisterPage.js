@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Import useAuth hook
 import GoogleSignInButton from '../components/auth/GoogleSignInButton';
-
-// Optional: Import a spinner component if you have one
-// import Spinner from '../components/layout/Spinner';
+import Spinner from '../components/layout/Spinner'; // Import the Spinner component
 
 const RegisterPage = () => {
     // --- Component State ---
@@ -74,13 +72,10 @@ const RegisterPage = () => {
             // navigate('/'); // Or navigate directly here if preferred
         }
         // Error display is handled by rendering {authError} from context
-    };
-
-    // --- Render ---
+    };    // --- Render ---
     return (
-        <div className="flex justify-center items-start min-h-[calc(100vh-150px)] py-10 px-4">
-            <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8 space-y-6">
-                <h2 className="text-3xl font-bold text-center text-gray-800">
+        <div className="flex justify-center items-start min-h-[calc(100vh-150px)] py-10 px-4 animate-fadeIn">            <div className="w-full max-w-md bg-theme-black-900 bg-opacity-70 rounded-xl shadow-purple-glow p-8 space-y-6 backdrop-blur-sm border border-theme-purple-800 animate-slideInUp">
+                <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-purple-gradient">
                     Create Account
                 </h2>
 
@@ -88,7 +83,7 @@ const RegisterPage = () => {
                 <form onSubmit={handleRegister} className="space-y-5">
                     {/* Name Input */}
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="name" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             Full Name
                         </label>
                         <input
@@ -101,7 +96,7 @@ const RegisterPage = () => {
 
                     {/* Email Input */}
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="email" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             Email address
                         </label>
                         <input
@@ -114,7 +109,7 @@ const RegisterPage = () => {
 
                     {/* Password Input */}
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="password" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             Password
                         </label>
                         <input
@@ -127,7 +122,7 @@ const RegisterPage = () => {
 
                     {/* Confirm Password Input */}
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             Confirm Password
                         </label>
                         <input
@@ -140,52 +135,50 @@ const RegisterPage = () => {
 
                     {/* Role Selection */}
                     <div>
-                        <label htmlFor="role-select-reg" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="role-select-reg" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             I am a...
                         </label>
                         <select
                             id="role-select-reg" required value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className="block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition-all duration-300"
                             aria-label="Select your role"
                         >
                             <option value="" disabled>-- Select Role --</option>
                             <option value="Car Owner">Car Owner</option>
                             <option value="Journalist">Journalist</option>
-                        </select>
-                    </div>
+                        </select>                    </div>
 
                     {/* Loading Indicator */}
-                    {isLoading && <p className="text-center text-sm text-blue-600">Registering...</p>}
-                    {/* {isLoading && <Spinner />} */}
+                    {isLoading && <Spinner size="small" />}
 
                     {/* Display Local Validation Error Message */}
-                    {message && <p className="text-center text-sm text-yellow-700 bg-yellow-100 p-2 rounded border border-yellow-300">{message}</p>}
+                    {message && <p className="text-center text-sm text-yellow-300 bg-yellow-900 bg-opacity-30 p-2 rounded border border-yellow-700 animate-pulse">{message}</p>}
 
                     {/* Display Auth Error Message from Context */}
-                    {authError && <p className="text-center text-sm text-red-600 bg-red-100 p-2 rounded border border-red-300">{authError}</p>}
+                    {authError && <p className="text-center text-sm text-red-500 bg-red-900 bg-opacity-30 p-2 rounded border border-red-700 animate-pulse">{authError}</p>}
 
                     {/* Submit Button */}
                     <div>
                         <button
                             type="submit" disabled={isLoading}
-                            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 transition duration-150 ease-in-out"
+                            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-purple-glow text-sm font-medium text-white gradient-button disabled:opacity-60 transition-all duration-300 transform hover:scale-105"
                         >
                             Register
                         </button>                    </div>
                 </form>                {/* --- Divider --- */}
                 <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300" />
+                        <div className="w-full border-t border-theme-purple-700" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-3 bg-white text-gray-500">Or</span>
+                        <span className="px-3 bg-theme-black-900 text-theme-purple-300">Or</span>
                     </div>
                 </div>
 
                 {/* --- Google Sign-In --- */}
                 <div className="space-y-4">
-                    <p className="text-center text-sm font-medium text-gray-700 mb-2">
+                    <p className="text-center text-sm font-medium text-theme-purple-200 mb-2">
                         Sign up with Google using your selected role
                     </p>
                     {role && <GoogleSignInButton role={role} />}
@@ -193,9 +186,9 @@ const RegisterPage = () => {
 
                 {/* --- Link to Login Page --- */}
                 <div className="mt-6 text-center text-sm">
-                    <p className="text-gray-600">
+                    <p className="text-theme-purple-200">
                         Already have an account?{' '}
-                        <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        <Link to="/login" className="font-medium text-theme-purple-400 hover:text-theme-purple-300 transition-all duration-300 hover:underline">
                             Sign in
                         </Link>
                     </p>
@@ -204,7 +197,7 @@ const RegisterPage = () => {
             {/* Basic reusable input style - can be moved to index.css */}
             <style jsx>{`
         .input-field {
-          @apply appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out;
+          @apply appearance-none block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 rounded-md shadow-sm text-white placeholder-theme-black-400 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out;
         }
       `}</style>
         </div>

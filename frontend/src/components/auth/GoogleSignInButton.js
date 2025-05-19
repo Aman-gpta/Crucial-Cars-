@@ -24,15 +24,15 @@ const GoogleSignInButton = ({ role }) => {
   };
 
   return (
-    <div>
+    <div className="animate-slideInUp">
       <button
         onClick={handleGoogleSignIn}
-        className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md shadow-sm flex items-center justify-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mb-4"
+        className="w-full bg-theme-black-800 border border-theme-purple-500 text-white py-2 px-4 rounded-md shadow-purple-glow flex items-center justify-center hover:bg-theme-black-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-purple-500 mb-4 transition-all duration-300 transform hover:scale-105"
       >
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" className="w-6 h-6 mr-2" />
         Continue with Google
       </button>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-sm mt-1 animate-pulse">{error}</p>}
     </div>
   );
 };

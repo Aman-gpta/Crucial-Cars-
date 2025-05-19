@@ -108,51 +108,51 @@ const OwnerDashboardPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-theme-purple-500"></div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Owner Dashboard</h1>
+      <div className="bg-theme-black-900 bg-opacity-80 rounded-lg shadow-purple-glow p-6 border border-theme-purple-700 backdrop-blur-sm">
+        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-purple-gradient mb-6">Owner Dashboard</h1>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-900 bg-opacity-30 border border-red-700 text-red-400 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
         
         {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-blue-50 rounded-lg p-4 shadow">
-            <h3 className="text-lg font-semibold text-blue-800">Total Cars</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalCars}</p>
+          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
+            <h3 className="text-lg font-semibold text-theme-purple-400">Total Cars</h3>
+            <p className="text-3xl font-bold text-theme-purple-300">{stats.totalCars}</p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4 shadow">
-            <h3 className="text-lg font-semibold text-green-800">Active Listings</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.activeCars}</p>
+          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
+            <h3 className="text-lg font-semibold text-theme-purple-400">Active Listings</h3>
+            <p className="text-3xl font-bold text-green-400">{stats.activeCars}</p>
           </div>
-          <div className="bg-purple-50 rounded-lg p-4 shadow">
-            <h3 className="text-lg font-semibold text-purple-800">Total Requests</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats.totalRequests}</p>
+          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
+            <h3 className="text-lg font-semibold text-theme-purple-400">Total Requests</h3>
+            <p className="text-3xl font-bold text-theme-purple-300">{stats.totalRequests}</p>
           </div>
-          <div className="bg-yellow-50 rounded-lg p-4 shadow">
-            <h3 className="text-lg font-semibold text-yellow-800">Pending Requests</h3>
-            <p className="text-3xl font-bold text-yellow-600">{stats.pendingRequests}</p>
+          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
+            <h3 className="text-lg font-semibold text-theme-purple-400">Pending Requests</h3>
+            <p className="text-3xl font-bold text-yellow-400">{stats.pendingRequests}</p>
           </div>
         </div>
         
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-theme-purple-800 mb-6">
           <nav className="flex space-x-8">
             <button
               onClick={() => setActiveTab('cars')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'cars'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-theme-purple-500 text-theme-purple-400'
+                  : 'border-transparent text-gray-400 hover:text-theme-purple-300 hover:border-theme-purple-300'
               }`}
             >
               My Cars
@@ -161,8 +161,8 @@ const OwnerDashboardPage = () => {
               onClick={() => setActiveTab('requests')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'requests'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-theme-purple-500 text-theme-purple-400'
+                  : 'border-transparent text-gray-400 hover:text-theme-purple-300 hover:border-theme-purple-300'
               }`}
             >
               Test Drive Requests
@@ -174,88 +174,78 @@ const OwnerDashboardPage = () => {
         {activeTab === 'cars' && (
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">My Cars</h2>
+              <h2 className="text-xl font-semibold text-theme-purple-300">My Cars</h2>
               <Link
                 to="/cars/new"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="gradient-button text-white font-medium py-2 px-4 rounded shadow-purple-glow transform hover:scale-105 transition duration-300"
               >
                 Add New Car
               </Link>
             </div>
             
             {cars.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">You haven't listed any cars yet.</p>
+              <div className="text-center py-8 bg-theme-black-800 rounded-lg border border-theme-purple-700">
+                <p className="text-gray-300 mb-4">You haven't listed any cars yet.</p>
                 <Link
                   to="/cars/new"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="gradient-button text-white font-medium py-2 px-4 rounded shadow-purple-glow transform hover:scale-105 transition duration-300"
                 >
                   List Your First Car
                 </Link>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full bg-white">
-                  <thead className="bg-gray-100">
+                <table className="min-w-full bg-theme-black-800 rounded-lg border border-theme-purple-700 shadow-purple-glow">
+                  <thead className="bg-theme-black-950">
                     <tr>
-                      <th className="py-3 px-4 text-left">Image</th>
-                      <th className="py-3 px-4 text-left">Make & Model</th>
-                      <th className="py-3 px-4 text-left">Year</th>
-                      <th className="py-3 px-4 text-left">Location</th>
-                      <th className="py-3 px-4 text-left">Status</th>
-                      <th className="py-3 px-4 text-left">Actions</th>
+                      <th className="py-3 px-4 text-left text-theme-purple-300">Image</th>
+                      <th className="py-3 px-4 text-left text-theme-purple-300">Details</th>
+                      <th className="py-3 px-4 text-left text-theme-purple-300">Price</th>
+                      <th className="py-3 px-4 text-left text-theme-purple-300">Status</th>
+                      <th className="py-3 px-4 text-left text-theme-purple-300">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-theme-purple-900">
                     {cars.map(car => (
-                      <tr key={car._id}>
-                        <td className="py-3 px-4">
-                          <img 
-                            src={car.image.startsWith('http') 
-                              ? car.image 
-                              : car.image.startsWith('/uploads/')
-                                ? car.image
-                                : `/uploads/${car.image}`
-                            } 
+                      <tr key={car._id} className="hover:bg-theme-black-700 transition duration-150">
+                        <td className="py-4 px-4">
+                          <img
+                            src={car.image || 'https://via.placeholder.com/100x70.png?text=No+Image'}
                             alt={`${car.make} ${car.model}`}
-                            className="h-16 w-24 object-cover rounded" 
+                            className="w-24 h-16 object-cover rounded border border-theme-purple-700"
                           />
                         </td>
-                        <td className="py-3 px-4 font-medium">{car.make} {car.model}</td>
-                        <td className="py-3 px-4">{car.year}</td>
-                        <td className="py-3 px-4">{car.location}</td>
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            car.isAvailable 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
+                        <td className="py-4 px-4">
+                          <p className="font-medium text-theme-purple-300">{car.year} {car.make} {car.model}</p>
+                          <p className="text-gray-400 text-sm">{car.location}</p>
+                        </td>
+                        <td className="py-4 px-4 text-theme-purple-300">₹{car.price}/day</td>
+                        <td className="py-4 px-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            car.isAvailable
+                              ? 'bg-green-900 bg-opacity-40 text-green-400 border border-green-700'
+                              : 'bg-red-900 bg-opacity-40 text-red-400 border border-red-700'
                           }`}>
-                            {car.isAvailable ? 'Available' : 'Unavailable'}
+                            {car.isAvailable ? 'Available' : 'Not Available'}
                           </span>
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-4 px-4">
                           <div className="flex space-x-2">
-                            <Link 
+                            <Link
                               to={`/cars/${car._id}`}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="px-2 py-1 bg-theme-black-700 hover:bg-theme-black-600 text-theme-purple-300 rounded text-sm transition duration-300 border border-theme-purple-700"
                             >
                               View
                             </Link>
-                            <Link 
-                              to={`/cars/${car._id}/edit`}
-                              className="text-indigo-600 hover:text-indigo-800"
-                            >
-                              Edit
-                            </Link>
-                            <button 
+                            <button
                               onClick={() => toggleCarAvailability(car._id, car.isAvailable)}
-                              className={`${
-                                car.isAvailable 
-                                  ? 'text-red-600 hover:text-red-800' 
-                                  : 'text-green-600 hover:text-green-800'
+                              className={`px-2 py-1 rounded text-sm transition duration-300 ${
+                                car.isAvailable
+                                  ? 'bg-red-900 bg-opacity-40 hover:bg-red-900 hover:bg-opacity-70 text-red-400 border border-red-700'
+                                  : 'bg-green-900 bg-opacity-40 hover:bg-green-900 hover:bg-opacity-70 text-green-400 border border-green-700'
                               }`}
                             >
-                              {car.isAvailable ? 'Disable' : 'Enable'}
+                              {car.isAvailable ? 'Set Unavailable' : 'Set Available'}
                             </button>
                           </div>
                         </td>

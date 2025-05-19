@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom'; // Import routing hooks
 import { useAuth } from '../context/AuthContext'; // Import custom hook for Auth Context
 import GoogleSignInButton from '../components/auth/GoogleSignInButton';
-
-// Optional: Import a spinner component if you have one
-// import Spinner from '../components/layout/Spinner';
+import Spinner from '../components/layout/Spinner'; // Import the Spinner component
 
 const LoginPage = () => {
     // --- Component State ---
@@ -60,10 +58,9 @@ const LoginPage = () => {
     // --- Render ---
     return (
         // Main container centered with padding
-        <div className="flex justify-center items-start min-h-[calc(100vh-150px)] py-10 px-4"> {/* Adjust min-height based on Navbar/Footer */}
-            {/* Login card styled with Tailwind */}
-            <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8 space-y-6">
-                <h2 className="text-3xl font-bold text-center text-gray-800">
+        <div className="flex justify-center items-start min-h-[calc(100vh-150px)] py-10 px-4 animate-fadeIn"> {/* Adjust min-height based on Navbar/Footer */}
+            {/* Login card styled with Tailwind */}            <div className="w-full max-w-md bg-theme-black-900 bg-opacity-70 rounded-xl shadow-purple-glow p-8 space-y-6 backdrop-blur-sm border border-theme-purple-800 animate-slideInUp">
+                <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-purple-gradient">
                     Sign In
                 </h2>
 
@@ -72,7 +69,7 @@ const LoginPage = () => {
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-theme-purple-200 mb-1"
                         >
                             Email address
                         </label>
@@ -84,7 +81,7 @@ const LoginPage = () => {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
+                            className="appearance-none block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 rounded-md shadow-sm placeholder-theme-black-400 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out text-white"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -92,7 +89,7 @@ const LoginPage = () => {
                     <div>
                         <label
                             htmlFor="password"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-theme-purple-200 mb-1"
                         >
                             Password
                         </label>
@@ -104,25 +101,23 @@ const LoginPage = () => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
+                            className="appearance-none block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 rounded-md shadow-sm placeholder-theme-black-400 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out text-white"
                             placeholder="********"
                         />
-                        {/* Optional: Add 'Forgot Password?' link here */}
-                    </div>
+                        {/* Optional: Add 'Forgot Password?' link here */}                    </div>
 
                     {/* Display Loading Indicator for form submission */}
-                    {isLoading && <p className="text-center text-sm text-blue-600">Processing...</p>}
-                    {/* {isLoading && <Spinner />} */}
+                    {isLoading && <Spinner size="small" />}
 
                     {/* Display Authentication Error Message */}
-                    {authError && <p className="text-center text-sm text-red-600 bg-red-100 p-2 rounded border border-red-300">{authError}</p>}
+                    {authError && <p className="text-center text-sm text-red-500 bg-red-900 bg-opacity-30 p-2 rounded border border-red-700 animate-pulse">{authError}</p>}
 
                     {/* Submit Button for Email/Password Form */}
                     <div>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 transition duration-150 ease-in-out"
+                            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-purple-glow text-sm font-medium text-white gradient-button disabled:opacity-60 transition-all duration-300 transform hover:scale-105"
                         >
                             Sign in
                         </button>
@@ -132,22 +127,22 @@ const LoginPage = () => {
                 {/* --- Divider --- */}
                 <div className="relative my-6"> {/* Added margin */}
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300" />
+                        <div className="w-full border-t border-theme-purple-700" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-3 bg-white text-gray-500">Or</span>
+                        <span className="px-3 bg-theme-black-900 text-theme-purple-300">Or</span>
                     </div>
                 </div>                {/* --- Google Sign-In Section --- */}
                 <div className="space-y-4">
                     <div> {/* Encapsulate role select */}
-                        <label htmlFor="role-select" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="role-select" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             Select Role (for Google Sign-Up)
                         </label>
                         <select
                             id="role-select"
                             value={selectedRole}
                             onChange={(e) => setSelectedRole(e.target.value)}
-                            className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className="block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition-all duration-300"
                             aria-label="Select your role if signing up with Google"
                         >
                             <option value="" disabled>-- Select Role --</option>
@@ -159,7 +154,7 @@ const LoginPage = () => {
                     {/* Google Sign-In Button */}
                     {selectedRole && <GoogleSignInButton role={selectedRole} />}
                     {!selectedRole && (
-                        <p className="text-sm text-gray-500 text-center">
+                        <p className="text-sm text-theme-purple-300 text-center animate-pulse">
                             Please select a role above to enable Google Sign-In
                         </p>
                     )}
@@ -167,9 +162,9 @@ const LoginPage = () => {
 
                 {/* --- Link to Register Page --- */}
                 <div className="mt-8 text-center text-sm"> {/* Added margin top */}
-                    <p className="text-gray-600">
+                    <p className="text-theme-purple-200">
                         Don't have an account?{' '}
-                        <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        <Link to="/register" className="font-medium text-theme-purple-400 hover:text-theme-purple-300 transition-all duration-300 hover:underline">
                             Sign up here
                         </Link>
                     </p>

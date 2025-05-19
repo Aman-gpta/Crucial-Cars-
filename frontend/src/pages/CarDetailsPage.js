@@ -138,11 +138,11 @@ const CarDetailsPage = () => {
     const canRequestTestDrive = userInfo?.role === 'Journalist' && car.isAvailable && userInfo?._id !== car.owner?._id;
 
     return (
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden p-6 md:p-8 lg:p-10">
+        <div className="bg-theme-black-900 bg-opacity-80 rounded-lg shadow-purple-glow overflow-hidden p-6 md:p-8 lg:p-10 border border-theme-purple-700 backdrop-blur-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Image Section */}
                 <div>
-                    <div className="relative overflow-hidden rounded-lg shadow-md mb-4 bg-gray-100">
+                    <div className="relative overflow-hidden rounded-lg shadow-md mb-4 bg-theme-black-800 border border-theme-purple-600">
                         <img
                             src={currentImage}
                             alt={`${car.make} ${car.model}`}
@@ -161,8 +161,8 @@ const CarDetailsPage = () => {
                                     alt={`${car.make} ${car.model} - View ${index + 1}`}
                                     className={`h-16 w-auto rounded cursor-pointer transition-all duration-200 
                                                ${currentImage === img 
-                                                   ? 'opacity-100 border-2 border-blue-500' 
-                                                   : 'opacity-75 hover:opacity-100 border border-transparent hover:border-indigo-500'}`}
+                                                   ? 'opacity-100 border-2 border-theme-purple-500 shadow-purple-glow' 
+                                                   : 'opacity-75 hover:opacity-100 border border-transparent hover:border-theme-purple-400'}`}
                                     onClick={() => handleImageClick(img)}
                                 />
                             ))}
@@ -172,62 +172,62 @@ const CarDetailsPage = () => {
 
                 {/* Details Section */}
                 <div>
-                    <h1 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-purple-gradient mb-2">
                         {car.year} {car.make} {car.model}
                     </h1>
-                    <p className="text-lg text-gray-500 mb-4 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <p className="text-lg text-theme-purple-300 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-1.5 text-theme-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         {car.location}
                     </p>
 
-                    <div className="mb-6 border-t pt-4">
-                        <h3 className="text-xl font-semibold text-gray-700 mb-3">Description</h3>
-                        <p className="text-gray-600 whitespace-pre-wrap">{car.description}</p>
+                    <div className="mb-6 border-t border-theme-purple-800 pt-4">
+                        <h3 className="text-xl font-semibold text-theme-purple-200 mb-3">Description</h3>
+                        <p className="text-gray-300 whitespace-pre-wrap">{car.description}</p>
                     </div>
 
-                    <div className="mb-6 border-t pt-4">
-                        <h3 className="text-xl font-semibold text-gray-700 mb-3">Owner Information</h3>
+                    <div className="mb-6 border-t border-theme-purple-800 pt-4">
+                        <h3 className="text-xl font-semibold text-theme-purple-200 mb-3">Owner Information</h3>
                         {car.owner ? (
-                            <p className="text-gray-600">Listed by: {car.owner.name} ({car.owner.email})</p>
+                            <p className="text-gray-300">Listed by: {car.owner.name} ({car.owner.email})</p>
                         ) : (
                             <p className="text-gray-500 italic">Owner information not available.</p>
                         )}
                     </div>
 
-                    <div className="mb-6 border-t pt-4">
-                        <h3 className="text-xl font-semibold text-gray-700 mb-3">Availability</h3>
-                        <p className={`text-lg font-medium ${car.isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className="mb-6 border-t border-theme-purple-800 pt-4">
+                        <h3 className="text-xl font-semibold text-theme-purple-200 mb-3">Availability</h3>
+                        <p className={`text-lg font-medium ${car.isAvailable ? 'text-green-400' : 'text-red-400'}`}>
                             {car.isAvailable ? 'Available for Test Drive' : 'Currently Unavailable'}
                         </p>
                     </div>
 
                     {/* Test Drive Request Button Area */}
                     {canRequestTestDrive && (
-                        <div className="border-t pt-6">
+                        <div className="border-t border-theme-purple-800 pt-6">
                             <button
                                 onClick={handleTestDriveRequest}
                                 disabled={requestLoading || !!requestSuccess}
-                                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+                                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-purple-glow text-sm font-medium text-white gradient-button disabled:opacity-60 disabled:cursor-not-allowed transition duration-300 ease-in-out transform hover:scale-105"
                             >
                                 {requestLoading ? 'Requesting...' : (requestSuccess ? 'Request Sent!' : 'Request Test Drive')}
                             </button>
-                            {requestError && <p className="text-sm text-red-600 text-center mt-2">{requestError}</p>}
-                            {requestSuccess && <p className="text-sm text-green-600 text-center mt-2">{requestSuccess}</p>}
+                            {requestError && <p className="text-sm text-red-400 text-center mt-2">{requestError}</p>}
+                            {requestSuccess && <p className="text-sm text-green-400 text-center mt-2">{requestSuccess}</p>}
                         </div>
                     )}
                     {!car.isAvailable && userInfo?.role === 'Journalist' && (
-                        <p className="text-sm text-orange-600 text-center mt-4 border-t pt-4">This car is currently marked as unavailable by the owner.</p>
+                        <p className="text-sm text-yellow-400 text-center mt-4 border-t border-theme-purple-800 pt-4">This car is currently marked as unavailable by the owner.</p>
                     )}
                     {userInfo?.role === 'Car Owner' && userInfo?._id === car.owner?._id && (
-                        <p className="text-sm text-blue-600 text-center mt-4 border-t pt-4">This is your car listing.</p>
+                        <p className="text-sm text-theme-purple-400 text-center mt-4 border-t border-theme-purple-800 pt-4">This is your car listing.</p>
                     )}
                     
                     {/* Link back to all cars */}
-                    <div className="mt-6 text-center border-t pt-4">
-                        <Link to="/" className="text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">
+                    <div className="mt-6 text-center border-t border-theme-purple-800 pt-4">
+                        <Link to="/" className="text-theme-purple-400 hover:text-theme-purple-300 transition duration-150 ease-in-out">
                             ← Back to Listings
                         </Link>
                     </div>

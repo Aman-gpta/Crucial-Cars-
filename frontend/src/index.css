@@ -3,8 +3,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optional: Add some base body styles */
+/* Base styles with purple-black theme */
 body {
-  @apply bg-gray-100 text-gray-900 antialiased;
-  /* Example base styles */
+  @apply bg-gray-900 text-gray-100 antialiased;
+  background: linear-gradient(to bottom, #0f0f1a, #1a1a2e);
+  min-height: 100vh;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Custom animations */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slideInUp {
+  animation: slideInUp 0.5s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite ease-in-out;
+}
+
+/* Enhanced smooth button hover effect */
+@keyframes buttonGlow {
+  0% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.7); }
+  100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.3); }
+}
+
+/* Enhanced shadow button hover effect */
+@keyframes shadowPulse {
+  0% { box-shadow: 0 0 0px rgba(139, 92, 246, 0); }
+  50% { box-shadow: 0 0 10px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.4); }
+  100% { box-shadow: 0 0 0px rgba(139, 92, 246, 0); }
+}
+
+.animate-button-glow {
+  animation: buttonGlow 2s infinite ease-in-out;
+}
+
+.animate-shadow-pulse {
+  animation: shadowPulse 2s infinite ease-in-out;
+}
+
+/* Gradient button hover effect */
+.gradient-button {
+  background-size: 200% 200%;
+  background-image: linear-gradient(45deg, #6b46c1, #9f7aea, #805ad5, #553c9a);
+  transition: all 0.3s ease;
+}
+
+.gradient-button:hover {
+  background-position: right center;
+  animation: gradientShift 3s ease infinite;
 }

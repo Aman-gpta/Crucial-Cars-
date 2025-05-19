@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 // Layout Components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import AnimatedBackground from './components/layout/AnimatedBackground';
 
 // Page Components
 import HomePage from './pages/HomePage';
@@ -29,6 +30,7 @@ function App() {
       <Router>
         {/* Main layout structure */}
         <div className="flex flex-col min-h-screen">
+          <AnimatedBackground /> {/* Add the animated background */}
           <Navbar /> {/* Navbar appears on all pages */}
           <main className="flex-grow container mx-auto px-4 py-8">
           {/* Define application routes */}

@@ -108,33 +108,31 @@ const CreateCarPage = () => {
         } finally {
             setLoading(false);
         }
-    };
-
-    return (
+    };    return (
         <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+            <h1 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-purple-gradient mb-8">
                 Add Your Car
             </h1>
 
             {/* Success Message */}
             {success && (
-                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                <div className="mb-4 p-4 bg-green-900 bg-opacity-30 border border-green-700 text-green-400 rounded animate-fadeIn">
                     {success}
                 </div>
             )}
 
             {/* Error Message */}
             {error && (
-                <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <div className="mb-4 p-4 bg-red-900 bg-opacity-30 border border-red-700 text-red-400 rounded animate-fadeIn">
                     {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+            <form onSubmit={handleSubmit} className="space-y-6 bg-theme-black-900 bg-opacity-80 p-6 rounded-lg shadow-purple-glow border border-theme-purple-700 backdrop-blur-sm animate-fadeIn">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {/* Make */}
                     <div>
-                        <label htmlFor="make" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="make" className="block text-sm font-medium text-theme-purple-300">
                             Make *
                         </label>
                         <input
@@ -144,14 +142,14 @@ const CreateCarPage = () => {
                             value={formData.make}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. Toyota, BMW, Ford"
                         />
                     </div>
 
                     {/* Model */}
                     <div>
-                        <label htmlFor="model" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="model" className="block text-sm font-medium text-theme-purple-300">
                             Model *
                         </label>
                         <input
@@ -161,14 +159,14 @@ const CreateCarPage = () => {
                             value={formData.model}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. Corolla, 3 Series, Mustang"
                         />
                     </div>
 
                     {/* Year */}
                     <div>
-                        <label htmlFor="year" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="year" className="block text-sm font-medium text-theme-purple-300">
                             Year *
                         </label>
                         <input
@@ -180,14 +178,14 @@ const CreateCarPage = () => {
                             required
                             min="1900"
                             max={new Date().getFullYear() + 1}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. 2022"
                         />
                     </div>
 
                     {/* Color */}
                     <div>
-                        <label htmlFor="color" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="color" className="block text-sm font-medium text-theme-purple-300">
                             Color *
                         </label>
                         <input
@@ -197,19 +195,19 @@ const CreateCarPage = () => {
                             value={formData.color}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. Black, Silver, Red"
                         />
                     </div>
 
                     {/* Price */}
                     <div>
-                        <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="price" className="block text-sm font-medium text-theme-purple-300">
                             Price (per day) *
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm">
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span className="text-gray-500 sm:text-sm">₹</span>
+                                <span className="text-theme-purple-400 sm:text-sm">₹</span>
                             </div>
                             <input
                                 type="number"
@@ -220,7 +218,7 @@ const CreateCarPage = () => {
                                 required
                                 min="0"
                                 step="0.01"
-                                className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500"
+                                className="block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white pl-7 pr-12 focus:border-theme-purple-500 focus:ring-theme-purple-500"
                                 placeholder="0.00"
                             />
                         </div>
@@ -228,7 +226,7 @@ const CreateCarPage = () => {
 
                     {/* Mileage */}
                     <div>
-                        <label htmlFor="mileage" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="mileage" className="block text-sm font-medium text-theme-purple-300">
                             Mileage *
                         </label>
                         <div className="relative mt-1 rounded-md shadow-sm">
@@ -240,18 +238,18 @@ const CreateCarPage = () => {
                                 onChange={handleChange}
                                 required
                                 min="0"
-                                className="block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500"
+                                className="block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white pr-12 focus:border-theme-purple-500 focus:ring-theme-purple-500"
                                 placeholder="e.g. 25000"
                             />
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                <span className="text-gray-500 sm:text-sm">miles</span>
+                                <span className="text-theme-purple-400 sm:text-sm">miles</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Transmission */}
                     <div>
-                        <label htmlFor="transmission" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="transmission" className="block text-sm font-medium text-theme-purple-300">
                             Transmission *
                         </label>
                         <select
@@ -260,7 +258,7 @@ const CreateCarPage = () => {
                             value={formData.transmission}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white py-2 px-3 shadow-sm focus:border-theme-purple-500 focus:outline-none focus:ring-theme-purple-500"
                         >
                             <option value="Automatic">Automatic</option>
                             <option value="Manual">Manual</option>
@@ -271,7 +269,7 @@ const CreateCarPage = () => {
 
                     {/* Fuel Type */}
                     <div>
-                        <label htmlFor="fuelType" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="fuelType" className="block text-sm font-medium text-theme-purple-300">
                             Fuel Type *
                         </label>
                         <select
@@ -280,7 +278,7 @@ const CreateCarPage = () => {
                             value={formData.fuelType}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white py-2 px-3 shadow-sm focus:border-theme-purple-500 focus:outline-none focus:ring-theme-purple-500"
                         >
                             <option value="Petrol">Petrol</option>
                             <option value="Diesel">Diesel</option>
@@ -293,7 +291,7 @@ const CreateCarPage = () => {
 
                     {/* Location */}
                     <div>
-                        <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="location" className="block text-sm font-medium text-theme-purple-300">
                             Location *
                         </label>
                         <input
@@ -303,25 +301,25 @@ const CreateCarPage = () => {
                             value={formData.location}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. New York, NY"
                         />
                     </div>
 
                     {/* Car Image Upload */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-theme-purple-300 mb-2">
                             Car Image *
                         </label>
 
-                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-theme-purple-600 rounded-md bg-theme-black-800 bg-opacity-50">
                             <div className="space-y-1 text-center">
                                 {imagePreview ? (
                                     <div>
                                         <img
                                             src={imagePreview}
                                             alt="Car preview"
-                                            className="mx-auto h-40 w-auto object-cover rounded"
+                                            className="mx-auto h-40 w-auto object-cover rounded border border-theme-purple-500 shadow-purple-glow"
                                         />
                                         <button
                                             type="button"
@@ -332,7 +330,7 @@ const CreateCarPage = () => {
                                                     fileInputRef.current.value = '';
                                                 }
                                             }}
-                                            className="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                            className="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-400 bg-red-900 bg-opacity-50 hover:bg-red-900 hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-300"
                                         >
                                             Remove
                                         </button>
@@ -340,7 +338,7 @@ const CreateCarPage = () => {
                                 ) : (
                                     <div>
                                         <svg
-                                            className="mx-auto h-12 w-12 text-gray-400"
+                                            className="mx-auto h-12 w-12 text-theme-purple-400"
                                             stroke="currentColor"
                                             fill="none"
                                             viewBox="0 0 48 48"
@@ -353,7 +351,7 @@ const CreateCarPage = () => {
                                                 strokeLinejoin="round"
                                             />
                                         </svg>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-theme-purple-400">
                                             PNG, JPG, JPEG up to 5MB
                                         </p>
                                     </div>
@@ -362,7 +360,7 @@ const CreateCarPage = () => {
                                 <div className="flex text-sm text-gray-600 justify-center">
                                     <label
                                         htmlFor="image-upload"
-                                        className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                        className="relative cursor-pointer bg-theme-black-800 rounded-md font-medium text-theme-purple-400 hover:text-theme-purple-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-theme-purple-500 transition-colors duration-300"
                                     >
                                         <span>{imagePreview ? 'Change image' : 'Upload an image'}</span>
                                         <input
@@ -383,7 +381,7 @@ const CreateCarPage = () => {
 
                 {/* Description */}
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="description" className="block text-sm font-medium text-theme-purple-300">
                         Description *
                     </label>
                     <textarea
@@ -393,7 +391,7 @@ const CreateCarPage = () => {
                         onChange={handleChange}
                         required
                         rows={4}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                         placeholder="Provide details about your car's features, condition, and any special notes..."
                     ></textarea>
                 </div>
@@ -403,7 +401,7 @@ const CreateCarPage = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        className={`gradient-button text-white font-medium py-3 px-6 rounded-md transition duration-300 shadow-purple-glow transform hover:scale-105 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                         {loading ? 'Adding Car...' : 'Add Car'}
                     </button>
