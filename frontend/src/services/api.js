@@ -1,10 +1,10 @@
 // frontend/src/services/api.js
 import axios from 'axios';
 
-// Determine the base URL for the API
-// Use environment variable for production, fallback for development
-// The proxy in package.json handles the /api prefix in development
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
+// Set the API base URL directly to ensure it's used consistently
+const API_BASE_URL = 'http://localhost:5000/api';
+
+console.log('Using API base URL:', API_BASE_URL);
 
 // Create an Axios instance with default configuration
 const api = axios.create({
@@ -12,6 +12,8 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: false, // Changed to false to fix CORS issues
+    timeout: 10000, // Set a timeout to avoid hanging requests
 });
 
 /*
@@ -28,14 +30,21 @@ api.interceptors.request.use(
                 const userInfo = JSON.parse(userInfoString);
                 // If user info and token exist, add the Authorization header
                 if (userInfo && userInfo.token) {
+                    console.log('Adding auth token to request:', config.url);
                     config.headers['Authorization'] = `Bearer ${userInfo.token}`;
+                    console.log(`Token (first 15 chars): ${userInfo.token.substring(0, 15)}...`);
+                } else {
+                    console.warn('User info found but no token available:', userInfo);
                 }
             } catch (e) {
                 console.error("Error parsing user info for interceptor:", e);
-                // Optionally clear invalid storage item
-                // localStorage.removeItem('userInfo');
+                // Clear invalid storage item to prevent persistent issues
+                localStorage.removeItem('userInfo');
             }
+        } else {
+            console.warn('No user info found in localStorage for request:', config.url);
         }
+        
         return config; // Return the (potentially modified) config
     },
     (error) => {
@@ -53,22 +62,33 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => {
         // If response is successful (status code 2xx), just return it
+        console.log(`API Response success [${response.config.method.toUpperCase()} ${response.config.url}]: Status ${response.status}`);
         return response;
     },
     (error) => {
         // Handle errors (status codes outside 2xx)
-        console.error("Axios response interceptor error:", error.response || error.message || error);
-
-        // Example: Handle expired token / unauthorized access globally
-        if (error.response && error.response.status === 401) {
-            console.log("Unauthorized (401). Possible expired token. Logging out.");
-            // Remove user info from storage
-            localStorage.removeItem('userInfo');
-            // Force a reload to the login page (or use state management/router)
-            // This simplistic approach might lose state, better integration with AuthContext is possible
-            if (window.location.pathname !== '/login') {
-                window.location.href = '/login';
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error(`API Response error [${error.config?.method?.toUpperCase()} ${error.config?.url}]: Status ${error.response.status}`, error.response.data);
+            
+            // Example: Handle expired token / unauthorized access globally
+            if (error.response.status === 401) {
+                console.log("Unauthorized (401). Possible expired token. Logging out.");
+                // Remove user info from storage
+                localStorage.removeItem('userInfo');
+                // Force a reload to the login page (or use state management/router)
+                // This simplistic approach might lose state, better integration with AuthContext is possible
+                if (window.location.pathname !== '/login') {
+                    window.location.href = '/login';
+                }
             }
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error(`API Network error [${error.config?.method?.toUpperCase()} ${error.config?.url}]: No response received`, error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error(`API Request setup error [${error.config?.url}]:`, error.message);
         }
 
         // Important: Re-reject the error so components calling the API can also handle it

@@ -20,6 +20,8 @@ import CreateCarPage from './pages/CreateCarPage';
 import ManageTestimonialsPage from './pages/admin/ManageTestimonialsPage'; // Import the admin page
 import OwnerDashboardPage from './pages/owner/OwnerDashboardPage'; // Import the owner dashboard page
 import JournalistDashboardPage from './pages/journalist/JournalistDashboardPage'; // Import the journalist dashboard page
+import UserProfilePage from './pages/UserProfilePage'; // Import the user profile page
+import TestRequestPage from './pages/test/TestRequestPage'; // Import the test page
 
 // Import the ProtectedRoute component (assuming it's in src/components/)
 import ProtectedRoute from './components/ProtectedRoute';
@@ -84,15 +86,22 @@ function App() {
               }
             />
 
-            {/* Example of a route that just needs login, any role */}
-            {/* <Route
-              path="/my-profile"
+            {/* User Profile Routes */}
+            {/* Personal profile for editing - requires authentication */}
+            <Route
+              path="/profile"
               element={
-                <ProtectedRoute> // No 'roles' prop means any authenticated user
-                  <UserProfilePage /> // Replace with your actual component
+                <ProtectedRoute>
+                  <UserProfilePage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
+            
+            {/* Public profile view for viewing other users' profiles */}
+            <Route path="/profile/:id" element={<UserProfilePage />} />
+            
+            {/* Test Routes - for developers only */}
+            <Route path="/test/requests" element={<ProtectedRoute roles={['Journalist']}><TestRequestPage /></ProtectedRoute>} />
 
             {/* --- Catch-all 404 Route --- */}
             {/* This must be the last route */}

@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import { createCar } from '../services/carService';
 
 const CreateCarPage = () => {
     // Navigation hook for redirecting after form submission
@@ -77,21 +77,11 @@ const CreateCarPage = () => {
             // Add all form fields to FormData
             Object.keys(formData).forEach(key => {
                 carFormData.append(key, formData[key]);
-            });
-
-            // Add the image file
+            });            // Add the image file
             carFormData.append('image', imageFile);
-
-            // Get token from userInfo
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // Important for file uploads
-                    Authorization: `Bearer ${userInfo.token}`
-                }
-            };
-
-            // Send request to backend
-            await axios.post('/api/cars', carFormData, config);
+            
+            // Send request to backend using carService
+            await createCar(carFormData);
 
             setSuccess('Car successfully added!');
 

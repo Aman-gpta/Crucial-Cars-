@@ -55,51 +55,49 @@ const HomePage = () => {
         loadTestimonials();
     }, []);
 
-    // Function to load cars data
+    // Re-fetch featured cars when returning to About view
+    useEffect(() => {
+        if (activeView === 'about') {
+            loadCars();
+        }
+    }, [activeView]);
+
+    // Re-fetch testimonials when switching to Testimonials view
+    useEffect(() => {
+        if (activeView === 'testimonials') {
+            loadTestimonials();
+        }
+    }, [activeView]);    // Function to load cars data
     const loadCars = async () => {
         setLoading(true);
         setError('');
         try {
+            console.log('Calling fetchCars function');
             const data = await fetchCars();
-            setCars(data);
-            setFilteredCars(data);
-            extractFilterOptions(data);
+            console.log('Cars data received in HomePage:', data);
+            setCars(data || []);
+            setFilteredCars(data || []);
+            if (data && data.length > 0) {
+                extractFilterOptions(data);
+            }
         } catch (err) {
+            console.error("Fetch Cars Error in HomePage:", err);
             setError('Failed to fetch car listings. Please try again later.');
-            console.error("Fetch Cars Error:", err.response || err.message || err);
         } finally {
             setLoading(false);
         }
-    };
-
-    // Function to load testimonials data
+    };    // Function to load testimonials data
     const loadTestimonials = async () => {
         setTestimonialsLoading(true);
         setTestimonialsError('');
         try {
+            console.log('Calling fetchTestimonials function');
             const data = await fetchTestimonials();
-            setTestimonials(data);
+            console.log('Testimonials received in HomePage:', data);
+            setTestimonials(data || []);
         } catch (err) {
-            setTestimonialsError('Failed to fetch testimonials. Using default testimonials instead.');
-            console.error("Fetch Testimonials Error:", err.response || err.message || err);
-
-            // Fallback to default testimonials if the API call fails
-            setTestimonials([
-                {
-                    _id: '1',
-                    name: "Ananya Verma",
-                    role: "Automobile Journalist",
-                    image: "https://randomuser.me/api/portraits/women/45.jpg",
-                    text: "CrucialCars helped me find the perfect car for my latest article. The process was seamless, and the car owner was very accommodating!"
-                },
-                {
-                    _id: '2',
-                    name: "Rohan Mehta",
-                    role: "Car Enthusiast",
-                    image: "https://randomuser.me/api/portraits/men/50.jpg",
-                    text: "As a car owner, I love sharing my vehicle with influencers. CrucialCars makes it easy to connect and earn extra income."
-                }
-            ]);
+            console.error("Fetch Testimonials Error in HomePage:", err);
+            setTestimonialsError('Failed to fetch testimonials.');
         } finally {
             setTestimonialsLoading(false);
         }
@@ -330,16 +328,21 @@ const HomePage = () => {
                                 <div className="flex justify-center py-12">
                                     <Spinner size="large" />
                                 </div>
-                            ) : error ? (
-                                <div className="bg-red-900 bg-opacity-30 border border-red-700 text-red-400 px-4 py-3 rounded">
-                                    {error}
-                                </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {featuredCars.map(car => (
-                                        <CarCard key={car._id} car={car} />
-                                    ))}
-                                </div>
+                                <>
+                                    {error && (
+                                        <div className="bg-red-900 bg-opacity-30 border border-red-700 text-red-400 px-4 py-3 rounded mb-4">
+                                            {error}
+                                        </div>
+                                    )}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {featuredCars.length > 0 ? (
+                                            featuredCars.map(car => <CarCard key={car._id} car={car} />)
+                                        ) : (
+                                            <p className="text-gray-400">No featured cars available.</p>
+                                        )}
+                                    </div>
+                                </>
                             )}
                         </section>
 
@@ -363,29 +366,36 @@ const HomePage = () => {
                                 <div className="flex justify-center py-12">
                                     <Spinner size="large" />
                                 </div>
-                            ) : testimonialsError ? (
-                                <div className="bg-red-900 bg-opacity-30 border border-red-700 text-red-400 px-4 py-3 rounded">
-                                    {testimonialsError}
-                                </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    {testimonials.slice(0, 3).map(testimonial => (
-                                        <div key={testimonial._id || testimonial.id} className="bg-theme-black-800 p-6 rounded-lg border border-theme-purple-700 shadow-md transform transition duration-300 hover:scale-105 hover:shadow-purple-glow">
-                                            <div className="flex items-center mb-4">
-                                                <img
-                                                    src={testimonial.image}
-                                                    alt={testimonial.name}
-                                                    className="w-12 h-12 rounded-full mr-4 border-2 border-theme-purple-500"
-                                                />
-                                                <div>
-                                                    <h3 className="font-semibold text-theme-purple-300">{testimonial.name}</h3>
-                                                    <p className="text-gray-400 text-sm">{testimonial.role}</p>
-                                                </div>
-                                            </div>
-                                            <p className="text-gray-300 italic">"{testimonial.text}"</p>
+                                <>
+                                    {testimonialsError && (
+                                        <div className="bg-red-900 bg-opacity-30 border border-red-700 text-red-400 px-4 py-3 rounded mb-4">
+                                            {testimonialsError}
                                         </div>
-                                    ))}
-                                </div>
+                                    )}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        {testimonials.length > 0 ? (
+                                            testimonials.slice(0, 3).map(testimonial => (
+                                                <div key={testimonial._id || testimonial.id} className="bg-theme-black-800 p-6 rounded-lg border border-theme-purple-700 shadow-md transform transition duration-300 hover:scale-105 hover:shadow-purple-glow">
+                                                    <div className="flex items-center mb-4">
+                                                        <img
+                                                            src={testimonial.image}
+                                                            alt={testimonial.name}
+                                                            className="w-12 h-12 rounded-full mr-4 border-2 border-theme-purple-500"
+                                                        />
+                                                        <div>
+                                                            <h3 className="font-semibold text-theme-purple-300">{testimonial.name}</h3>
+                                                            <p className="text-gray-400 text-sm">{testimonial.role}</p>
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-gray-300 italic">"{testimonial.text}"</p>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-gray-400">No testimonials available.</p>
+                                        )}
+                                    </div>
+                                </>
                             )}
                         </section>
                     </div>
@@ -572,61 +582,34 @@ const HomePage = () => {
 
                 {/* Testimonials View */}
                 {activeView === 'testimonials' && (
-                    <div className="max-w-5xl mx-auto">
-                        <h2 className="text-3xl font-bold mb-12 text-center text-transparent bg-clip-text bg-purple-gradient">Customer Testimonials</h2>
+                    <section className="bg-theme-black-900 bg-opacity-80 p-8 rounded-xl shadow-purple-glow border border-theme-purple-800 backdrop-blur-sm">
+                        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-purple-gradient text-center mb-12">What Our Customers Say</h2>
 
                         {testimonialsLoading ? (
                             <div className="flex justify-center py-12">
                                 <Spinner size="large" />
                             </div>
-                        ) : testimonialsError ? (
-                            <div className="bg-theme-black-800 border border-theme-purple-700 text-theme-purple-400 px-4 py-3 rounded mb-4">
-                                {testimonialsError}
-                            </div>
                         ) : (
-                            <div className="grid grid-cols-1 gap-10">
-                                {testimonials.map(testimonial => (
-                                    <div key={testimonial._id || testimonial.id} className="bg-theme-black-900 bg-opacity-80 p-8 rounded-xl shadow-purple-glow border border-theme-purple-700 backdrop-blur-sm transform transition duration-300 hover:scale-[1.02]">
-                                        <div className="flex flex-col md:flex-row md:items-center">
-                                            <div className="mb-6 md:mb-0 md:mr-8">
-                                                <img
-                                                    src={testimonial.image}
-                                                    alt={testimonial.name}
-                                                    className="w-24 h-24 rounded-full mx-auto md:mx-0 border-2 border-theme-purple-500 shadow-purple-glow"
-                                                />
-                                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {testimonials.slice(0, 3).map(testimonial => (
+                                    <div key={testimonial._id || testimonial.id} className="bg-theme-black-800 p-6 rounded-lg border border-theme-purple-700 shadow-md transform transition duration-300 hover:scale-105 hover:shadow-purple-glow">
+                                        <div className="flex items-center mb-4">
+                                            <img
+                                                src={testimonial.image}
+                                                alt={testimonial.name}
+                                                className="w-12 h-12 rounded-full mr-4 border-2 border-theme-purple-500"
+                                            />
                                             <div>
-                                                <p className="text-gray-300 text-lg italic mb-4">"{testimonial.text}"</p>
-                                                <div>
-                                                    <h3 className="font-semibold text-lg text-theme-purple-300">{testimonial.name}</h3>
-                                                    <p className="text-gray-400">{testimonial.role}</p>
-                                                </div>
+                                                <h3 className="font-semibold text-theme-purple-300">{testimonial.name}</h3>
+                                                <p className="text-gray-400 text-sm">{testimonial.role}</p>
                                             </div>
                                         </div>
+                                        <p className="text-gray-300 italic">"{testimonial.text}"</p>
                                     </div>
                                 ))}
                             </div>
                         )}
-
-                        <div className="mt-16 bg-theme-black-900 bg-opacity-70 p-8 rounded-xl text-center border border-theme-purple-700 shadow-purple-glow">
-                            <h3 className="text-2xl font-semibold mb-4 text-theme-purple-300">Ready to experience CrucialCars?</h3>
-                            <p className="text-gray-300 mb-6">Join our satisfied customers and find your perfect drive today.</p>
-                            <div className="flex flex-col sm:flex-row justify-center gap-4">
-                                <button
-                                    onClick={() => setActiveView('browse')}
-                                    className="gradient-button text-white font-medium py-3 px-6 rounded-lg transition duration-300 shadow-purple-glow transform hover:scale-105"
-                                >
-                                    Browse Cars
-                                </button>
-                                <Link
-                                    to="/register"
-                                    className="bg-theme-black-800 hover:bg-theme-black-700 text-theme-purple-300 font-medium py-3 px-6 rounded-lg border border-theme-purple-600 transition duration-300 transform hover:scale-105"
-                                >
-                                    Create Account
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
                 )}
 
                 {/* Join the Community Section */}

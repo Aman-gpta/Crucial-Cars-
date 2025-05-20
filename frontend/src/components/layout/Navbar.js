@@ -90,12 +90,18 @@ const Navbar = () => {
                             )}
 
                             {/* User Info and Logout Button with enhanced styling */}
-                            <li className="flex items-center space-x-4 pt-3 md:pt-0"> {/* Increased padding for mobile */}
-                                {/* Enhanced user greeting badge */}
-                                <span className="hidden sm:inline text-theme-purple-200 bg-theme-black-800 px-4 py-1.5 rounded-full border-2 border-theme-purple-600">Hi, {userInfo?.name}!</span>
+                            <li className="flex items-center space-x-4 pt-3 md:pt-0">
+                                {/* Enhanced user greeting badge - now a direct link */}
+                                <Link 
+                                    to="/profile" 
+                                    className="hidden sm:inline text-theme-purple-200 bg-theme-black-800 px-4 py-1.5 rounded-full border-2 border-theme-purple-600 cursor-pointer hover:bg-theme-purple-800 hover:text-white hover:shadow-purple-neon transition-all duration-300"
+                                >
+                                    Hi, {userInfo?.name}!
+                                </Link>
+                                
                                 <button // <-- THIS BUTTON SHOULD APPEAR
                                     onClick={handleLogout} // Attach logout handler
-                                    className="gradient-button px-6 py-2.5 rounded-full text-white font-medium transition-all duration-300 hover:shadow-purple-neon transform hover:scale-105"
+                                    className="gradient-button px-6 py-2.5 rounded-full text-white font-medium transition-all duration-300 hover:shadow-purple-neon"
                                     aria-label="Logout"
                                 >
                                     Logout

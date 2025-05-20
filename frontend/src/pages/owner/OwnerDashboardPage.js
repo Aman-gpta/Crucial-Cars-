@@ -123,49 +123,83 @@ const OwnerDashboardPage = () => {
             {error}
           </div>
         )}
-        
-        {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
-            <h3 className="text-lg font-semibold text-theme-purple-400">Total Cars</h3>
-            <p className="text-3xl font-bold text-theme-purple-300">{stats.totalCars}</p>
+          {/* Dashboard Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+          <div className="bg-theme-black-850 rounded-lg p-6 shadow-purple-glow border-2 border-theme-purple-700 transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-theme-purple-300">Total Cars</h3>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-theme-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+            </div>
+            <p className="text-4xl font-bold text-theme-purple-200">{stats.totalCars}</p>
           </div>
-          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
-            <h3 className="text-lg font-semibold text-theme-purple-400">Active Listings</h3>
-            <p className="text-3xl font-bold text-green-400">{stats.activeCars}</p>
+          <div className="bg-theme-black-850 rounded-lg p-6 shadow-purple-glow border-2 border-green-700 transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-green-400">Active Listings</h3>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-4xl font-bold text-green-300">{stats.activeCars}</p>
           </div>
-          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
-            <h3 className="text-lg font-semibold text-theme-purple-400">Total Requests</h3>
-            <p className="text-3xl font-bold text-theme-purple-300">{stats.totalRequests}</p>
+          <div className="bg-theme-black-850 rounded-lg p-6 shadow-purple-glow border-2 border-theme-purple-700 transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-theme-purple-300">Total Requests</h3>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-theme-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-4xl font-bold text-theme-purple-200">{stats.totalRequests}</p>
           </div>
-          <div className="bg-theme-black-800 rounded-lg p-4 shadow-purple-glow border border-theme-purple-700">
-            <h3 className="text-lg font-semibold text-theme-purple-400">Pending Requests</h3>
-            <p className="text-3xl font-bold text-yellow-400">{stats.pendingRequests}</p>
+          <div className="bg-theme-black-850 rounded-lg p-6 shadow-purple-glow border-2 border-yellow-600 transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-yellow-300">Pending Requests</h3>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-4xl font-bold text-yellow-300">{stats.pendingRequests}</p>
           </div>
         </div>
-        
-        {/* Tab Navigation */}
-        <div className="border-b border-theme-purple-800 mb-6">
-          <nav className="flex space-x-8">
+          {/* Tab Navigation */}
+        <div className="border-b-2 border-theme-purple-700 mb-8">
+          <nav className="flex space-x-12">
             <button
               onClick={() => setActiveTab('cars')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-4 border-b-2 font-medium text-md transition-all duration-300 ${
                 activeTab === 'cars'
-                  ? 'border-theme-purple-500 text-theme-purple-400'
+                  ? 'border-theme-purple-500 text-theme-purple-200 font-semibold'
                   : 'border-transparent text-gray-400 hover:text-theme-purple-300 hover:border-theme-purple-300'
               }`}
             >
-              My Cars
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                </svg>
+                My Cars
+              </div>
             </button>
             <button
               onClick={() => setActiveTab('requests')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-4 border-b-2 font-medium text-md transition-all duration-300 ${
                 activeTab === 'requests'
-                  ? 'border-theme-purple-500 text-theme-purple-400'
+                  ? 'border-theme-purple-500 text-theme-purple-200 font-semibold'
                   : 'border-transparent text-gray-400 hover:text-theme-purple-300 hover:border-theme-purple-300'
               }`}
-            >
-              Test Drive Requests
+            >              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Test Drive Requests
+                {stats.pendingRequests > 0 && activeTab !== 'requests' && (
+                  <span className="ml-2 bg-yellow-500 text-dark font-bold text-xs px-2 py-0.5 rounded-full">
+                    {stats.pendingRequests}
+                  </span>
+                )}
+              </div>
             </button>
           </nav>
         </div>
@@ -257,69 +291,159 @@ const OwnerDashboardPage = () => {
             )}
           </div>
         )}
-        
-        {/* Test Drive Requests Tab */}
+          {/* Test Drive Requests Tab */}
         {activeTab === 'requests' && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Test Drive Requests</h2>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-purple-gradient">Test Drive Requests</h2>
+            </div>
             
             {requests.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">You don't have any test drive requests yet.</p>
+              <div className="text-center py-16 bg-theme-black-800 rounded-lg shadow-purple-glow border-2 border-theme-purple-600 backdrop-blur-sm animate-pulse-slow">
+                <div className="mb-6">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-theme-purple-400 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                <p className="text-theme-purple-200 mb-4 text-xl font-semibold">You don't have any test drive requests yet.</p>
+                <p className="text-theme-purple-400 max-w-lg mx-auto">Your test drive requests will appear here once journalists express interest in your cars.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white">
-                  <thead className="bg-gray-100">
+              <div className="overflow-x-auto bg-theme-black-800 rounded-lg border-2 border-theme-purple-600 shadow-purple-glow">
+                <table className="min-w-full">
+                  <thead className="bg-theme-black-900 border-b-2 border-theme-purple-700">
                     <tr>
-                      <th className="py-3 px-4 text-left">Journalist</th>
-                      <th className="py-3 px-4 text-left">Car</th>
-                      <th className="py-3 px-4 text-left">Requested Date</th>
-                      <th className="py-3 px-4 text-left">Status</th>
-                      <th className="py-3 px-4 text-left">Message</th>
-                      <th className="py-3 px-4 text-left">Actions</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Journalist</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Car</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Requested Date</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Status</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Message</th>
+                      <th className="py-5 px-6 text-left text-theme-purple-300 font-semibold text-lg">Actions</th>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  </thead>                  <tbody className="divide-y-2 divide-theme-purple-800">
                     {requests.map(request => (
-                      <tr key={request._id}>
-                        <td className="py-3 px-4 font-medium">
-                          {request.journalist?.name || 'Unknown'}
+                      <tr key={request._id} className="hover:bg-theme-black-850 transition-colors duration-150">
+                        <td className="py-5 px-6">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 rounded-full bg-theme-purple-700 flex items-center justify-center mr-3 text-white font-medium border border-theme-purple-500">
+                              {request.journalist?.name?.charAt(0) || '?'}
+                            </div>
+                            <span className="text-theme-purple-100 font-medium">
+                              {request.journalist?.name || 'Unknown'}
+                            </span>
+                          </div>
                         </td>
-                        <td className="py-3 px-4">
-                          {request.car ? `${request.car.make} ${request.car.model} (${request.car.year})` : 'Unknown Car'}
+                        <td className="py-5 px-6">
+                          {request.car ? (
+                            <div className="flex items-center">
+                              <div className="relative h-16 w-24 overflow-hidden rounded-md mr-4 border-2 border-theme-purple-600 shadow-sm">
+                                <img 
+                                  src={request.car.image || 'https://via.placeholder.com/96x64.png?text=No+Image'}
+                                  alt={`${request.car.make} ${request.car.model}`}
+                                  className="h-full w-full object-cover hover:scale-110 transition-transform duration-500" 
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = 'https://via.placeholder.com/96x64.png?text=No+Image';
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <span className="text-theme-purple-100 font-semibold hover:text-theme-purple-200 transition-colors block">
+                                  {request.car.make} {request.car.model}
+                                </span>
+                                <span className="text-theme-purple-400 text-sm block mt-1">
+                                  {request.car.year}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 italic">Unknown Car</span>
+                          )}
                         </td>
-                        <td className="py-3 px-4">
-                          {request.requestedDateTime 
-                            ? new Date(request.requestedDateTime).toLocaleDateString() 
-                            : 'Not specified'}
+                        <td className="py-5 px-6">
+                          <div className="text-theme-purple-200">
+                            {request.requestedDateTime 
+                              ? new Date(request.requestedDateTime).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })
+                              : 'Not specified'}
+                            <span className="block text-theme-purple-400 text-sm mt-1">
+                              {request.requestedDateTime 
+                                ? new Date(request.requestedDateTime).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                : ''}
+                            </span>
+                          </div>
                         </td>
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            request.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                            request.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                            request.status === 'Rejected' ? 'bg-red-100 text-red-800' :
-                            'bg-blue-100 text-blue-800'
+                        <td className="py-5 px-6">
+                          <span className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center ${
+                            request.status === 'Pending' ? 'bg-yellow-900 bg-opacity-30 text-yellow-300 border-2 border-yellow-600' :
+                            request.status === 'Approved' ? 'bg-green-900 bg-opacity-30 text-green-300 border-2 border-green-600' :
+                            request.status === 'Rejected' ? 'bg-red-900 bg-opacity-30 text-red-300 border-2 border-red-600' :
+                            'bg-blue-900 bg-opacity-30 text-blue-300 border-2 border-blue-600'
                           }`}>
+                            {request.status === 'Pending' && (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                            {request.status === 'Approved' && (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                            {request.status === 'Rejected' && (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            )}
+                            {request.status === 'Completed' && (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
                             {request.status}
                           </span>
-                        </td>
-                        <td className="py-3 px-4 max-w-xs truncate">
-                          {request.message || 'No message'}
-                        </td>
-                        <td className="py-3 px-4">
+                        </td>                        <td className="py-5 px-6">
+                          {request.message ? (
+                            <div className="relative group">
+                              <div className="flex items-center">
+                                <div className="max-w-[200px] text-theme-purple-200 truncate">
+                                  {request.message}
+                                </div>
+                                <span className="ml-2 text-xs text-theme-purple-400">(hover to read)</span>
+                              </div>
+                              <div className="absolute left-0 top-0 mt-8 bg-theme-black-900 border-2 border-theme-purple-600 p-4 rounded-lg shadow-purple-glow z-20 w-80 hidden group-hover:block">
+                                <div className="text-theme-purple-100 whitespace-normal">{request.message}</div>
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 italic">No message</span>
+                          )}
+                        </td>                        <td className="py-5 px-6">
                           {request.status === 'Pending' && (
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-3">
                               <button 
                                 onClick={() => handleRequestUpdate(request._id, 'Approved')}
-                                className="text-green-600 hover:text-green-800"
+                                className="px-4 py-2 bg-green-900 bg-opacity-30 border-2 border-green-600 rounded-full text-green-300 hover:bg-green-800 hover:bg-opacity-50 transition-all duration-300 flex items-center"
                               >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
                                 Approve
                               </button>
                               <button 
                                 onClick={() => handleRequestUpdate(request._id, 'Rejected')}
-                                className="text-red-600 hover:text-red-800"
+                                className="px-4 py-2 bg-red-900 bg-opacity-30 border-2 border-red-600 rounded-full text-red-300 hover:bg-red-800 hover:bg-opacity-50 transition-all duration-300 flex items-center"
                               >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                                 Reject
                               </button>
                             </div>
@@ -327,10 +451,24 @@ const OwnerDashboardPage = () => {
                           {request.status === 'Approved' && (
                             <button 
                               onClick={() => handleRequestUpdate(request._id, 'Completed')}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="px-4 py-2 bg-blue-900 bg-opacity-30 border-2 border-blue-600 rounded-full text-blue-300 hover:bg-blue-800 hover:bg-opacity-50 transition-all duration-300 flex items-center"
                             >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
                               Mark Completed
                             </button>
+                          )}
+                          {request.status === 'Rejected' && (
+                            <span className="text-gray-500 italic">No actions available</span>
+                          )}
+                          {request.status === 'Completed' && (
+                            <span className="text-theme-purple-400 flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              Test drive completed
+                            </span>
                           )}
                         </td>
                       </tr>

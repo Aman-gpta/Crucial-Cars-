@@ -55,6 +55,8 @@ const testDriveRequestSchema = new mongoose.Schema(
 testDriveRequestSchema.index({ journalist: 1, status: 1 }); // Journalist looking at their requests
 testDriveRequestSchema.index({ owner: 1, status: 1 }); // Owner looking at incoming requests
 testDriveRequestSchema.index({ car: 1 }); // Find requests for a specific car
+// Index for faster lookup of active requests by journalist and car
+testDriveRequestSchema.index({ journalist: 1, car: 1, status: 1 });
 
 // Compile the schema into a model
 const TestDriveRequest = mongoose.model(

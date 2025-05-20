@@ -9,15 +9,19 @@ const CarCard = ({ car, onDelete }) => {
     const [deleting, setDeleting] = useState(false);
     const { userInfo } = useAuth();
     const navigate = useNavigate();    // Basic placeholder image if no images are provided
-    const imageUrl = car.images && car.images.length > 0 
-        ? car.images[0] 
-        : car.image 
-            ? (car.image.startsWith('http') 
+    const imageUrl = car.image 
+        ? (car.image.startsWith('http') 
+            ? car.image 
+            : `http://localhost:5000${car.image.startsWith('/uploads') 
                 ? car.image 
-                : car.image.startsWith('/uploads/') 
-                    ? car.image 
-                    : `/uploads/${car.image}`)
-            : 'https://via.placeholder.com/400x300.png?text=No+Image';
+                : `/uploads/${car.image}`}`) 
+        : (car.images && car.images.length > 0 
+            ? (car.images[0].startsWith('http')
+                ? car.images[0]
+                : `http://localhost:5000${car.images[0].startsWith('/uploads')
+                    ? car.images[0]
+                    : `/uploads/${car.images[0]}`}`)
+            : 'https://via.placeholder.com/400x300.png?text=No+Image');
 
     // Check if current user is the owner of this car
     const isOwner = userInfo && car.owner && userInfo._id === car.owner._id;

@@ -32,7 +32,9 @@ const CarDetailsPage = () => {
         
         // For backend paths that start with /uploads, prepend the backend URL
         return `http://localhost:5000${imagePath.startsWith('/uploads') ? imagePath : `/uploads/${imagePath}`}`;
-    };    useEffect(() => {
+    };
+    
+    useEffect(() => {
         const loadCarDetails = async () => {
             setLoading(true);
             setError('');
@@ -79,7 +81,9 @@ const CarDetailsPage = () => {
                 } else {
                     setCurrentImage(placeholderImage);
                     setGalleryImages([]);
-                }                // Check for existing request if user is a journalist
+                }
+                
+                // Check for existing request if user is a journalist
                 if (userInfo && userInfo.role === 'Journalist') {
                     console.log('User is a journalist, checking for existing requests');
                     console.log('Current user info:', userInfo);
@@ -116,7 +120,9 @@ const CarDetailsPage = () => {
         };
 
         loadCarDetails();
-    }, [carId, userInfo]);    // Function to refresh the existing request status
+    }, [carId, userInfo]);
+    
+    // Function to refresh the existing request status
     const refreshRequestStatus = async () => {
         console.log('Refreshing request status for car:', carId);
         if (userInfo && userInfo.role === 'Journalist') {
@@ -169,7 +175,8 @@ const CarDetailsPage = () => {
         setRequestError('');
         setRequestSuccess('');
         
-        try {            // If there's an existing request, withdraw it
+        try {
+            // If there's an existing request, withdraw it
             if (existingRequest) {
                 console.log(`Attempting to withdraw request with ID: ${existingRequest._id}`);
                 console.log('Full existingRequest object:', JSON.stringify(existingRequest, null, 2));
@@ -177,6 +184,7 @@ const CarDetailsPage = () => {
                 if (!existingRequest._id) {
                     console.error('Missing request ID in existingRequest object!');
                     setRequestError("Cannot withdraw request: Request ID is missing.");
+                    setRequestLoading(false);
                     return;
                 }
                 
@@ -200,7 +208,8 @@ const CarDetailsPage = () => {
                         refreshRequestStatus();
                     }, 1000);
                 }
-            }            // Otherwise, redirect to journalist dashboard with the car pre-selected
+            }
+            // Otherwise, redirect to journalist dashboard with the car pre-selected
             else {
                 console.log(`Redirecting to journalist dashboard for car: ${carId}`);
                 // Navigate to journalist dashboard with state to indicate which car was selected
@@ -212,7 +221,8 @@ const CarDetailsPage = () => {
                     } 
                 });
                 return;
-            }} catch (err) {
+            }
+        } catch (err) {
             console.error('Unexpected error in handleTestDriveRequest:', err);
             setRequestError("An unexpected error occurred. Please try again later.");
             
@@ -255,7 +265,8 @@ const CarDetailsPage = () => {
     return (
         <div className="bg-theme-black-900 bg-opacity-80 rounded-lg shadow-purple-glow overflow-hidden p-6 md:p-8 lg:p-10 border border-theme-purple-700 backdrop-blur-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Image Section */}                <div>
+                {/* Image Section */}
+                <div>
                     <div className="relative overflow-hidden rounded-lg shadow-md mb-4 bg-theme-black-800 border border-theme-purple-600">
                         <img
                             src={currentImage || placeholderImage}
@@ -363,7 +374,9 @@ const CarDetailsPage = () => {
                         <p className={`text-lg font-medium ${car.isAvailable ? 'text-green-400' : 'text-red-400'}`}>
                             {car.isAvailable ? 'Available for Test Drive' : 'Currently Unavailable'}
                         </p>
-                    </div>                    {/* Test Drive Request Button Area */}
+                    </div>
+                    
+                    {/* Test Drive Request Button Area */}
                     {canRequestTestDrive && (
                         <div className="border-t border-theme-purple-800 pt-6">
                             <button

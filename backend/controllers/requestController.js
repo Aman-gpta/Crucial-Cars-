@@ -182,6 +182,127 @@ const getRequestById = async (req, res) => {
     }
 };
 
+// @desc    Check if a journalist has an active request for a specific car
+// @route   GET /api/requests/check/:carId
+// @access  Private (Journalist only)
+const checkExistingRequest = async (req, res) => {
+    try {
+        const carId = req.params.carId;
+        const journalistId = req.user._id;
+
+        console.log(`Check existing request - Car ID: ${carId}, Journalist ID: ${journalistId}`);
+
+        if (!carId) {
+            console.error('Missing car ID in check request');
+            return res.status(400).json({ message: 'Car ID is required' });
+        }
+
+        // Debugging - explicitly find all requests by this journalist
+        const allJournalistRequests = await TestDriveRequest.find({
+            journalist: journalistId
+        });
+        console.log(`Found ${allJournalistRequests.length} total requests by journalist ${journalistId}`);
+        
+        // Check active requests for this car by this journalist
+        const request = await TestDriveRequest.findOne({
+            car: carId,
+            journalist: journalistId,
+            status: { $in: ['Pending', 'Approved'] } // Only active requests
+        }).populate('car', 'make model year');
+
+        if (!request) {
+            console.log(`No active request found for car ${carId} by journalist ${journalistId}`);
+            return res.status(404).json({ message: 'No active request found for this car' });
+        }
+
+        console.log(`Found existing request: ${request._id} with status: ${request.status}`);
+        console.log('Full request data:', JSON.stringify(request, null, 2));
+        
+        // Explicitly include _id in the response for clarity
+        const responseData = {
+            _id: request._id,
+            status: request.status,
+            createdAt: request.createdAt,
+            car: request.car,
+            ownerResponse: request.ownerResponse,
+            requestedDateTime: request.requestedDateTime,
+            message: request.message
+        };
+        
+        res.json(responseData);
+    } catch (error) {
+        console.error('Error checking existing request:', error);
+        if (error.name === 'CastError' && error.kind === 'ObjectId') {
+            return res.status(400).json({ message: 'Invalid car ID format' });
+        }
+        res.status(500).json({ message: 'Server error checking request' });
+    }
+};
+
+// @desc    Withdraw (cancel) a test drive request
+// @route   DELETE /api/requests/:id
+// @access  Private (Journalist who created the request only)
+const withdrawRequest = async (req, res) => {
+    try {
+        const requestId = req.params.id;
+        const journalistId = req.user._id;
+
+        console.log(`Withdraw request initiated - Request ID: ${requestId}, Journalist ID: ${journalistId}`);
+
+        if (!requestId) {
+            console.error('Missing request ID in withdraw request');
+            return res.status(400).json({ message: 'Request ID is required' });
+        }
+
+        // First check if the request exists
+        const request = await TestDriveRequest.findById(requestId);
+
+        if (!request) {
+            console.error(`Request with ID ${requestId} not found`);
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        console.log(`Found request to withdraw: ${JSON.stringify(request, null, 2)}`);
+
+        // Ensure only the journalist who created the request can withdraw it
+        if (request.journalist.toString() !== journalistId.toString()) {
+            console.error(`Authentication failure: User ${journalistId} attempted to withdraw request ${requestId} belonging to journalist ${request.journalist}`);
+            return res.status(403).json({ message: 'Not authorized to withdraw this request' });
+        }
+
+        // Check if the request is in a state that can be withdrawn
+        if (request.status !== 'Pending') {
+            console.error(`Cannot withdraw request with status ${request.status}`);
+            return res.status(400).json({ 
+                message: `Cannot withdraw a request that is already ${request.status}. Please contact the car owner.` 
+            });
+        }
+
+        // Store some metadata for logging
+        const carId = request.car;
+        
+        // Delete the request
+        const deleteResult = await request.deleteOne();
+        console.log(`Request ${requestId} successfully withdrawn by journalist ${journalistId}`);
+        console.log(`Delete result: ${JSON.stringify(deleteResult, null, 2)}`);
+        
+        // Additional query to verify the request was deleted
+        const verifyDeleted = await TestDriveRequest.findById(requestId);
+        console.log(`Verification - Is request still present?: ${verifyDeleted ? 'Yes' : 'No'}`);
+          res.json({ 
+            message: 'Test drive request successfully withdrawn',
+            requestId: requestId,
+            carId: carId
+        });
+    } catch (error) {
+        console.error('Error withdrawing request:', error);
+        if (error.name === 'CastError' && error.kind === 'ObjectId') {
+            return res.status(400).json({ message: 'Invalid request ID format' });
+        }
+        res.status(500).json({ message: 'Server error withdrawing request' });
+    }
+};
+
 
 export {
     createRequest,
@@ -189,4 +310,6 @@ export {
     getOutgoingRequests,
     updateRequestStatus,
     getRequestById,
+    checkExistingRequest,
+    withdrawRequest,
 };

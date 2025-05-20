@@ -11,8 +11,8 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState(''); // User must select a role
     const [message, setMessage] = useState(''); // Local messages (e.g., password mismatch)
+    const [role, setRole] = useState(''); // New state for role selection
 
     // --- Auth Context ---
     const {
@@ -50,10 +50,6 @@ const RegisterPage = () => {
         setMessage('');     // Clear previous local messages
 
         // Client-side validation
-        if (!role) {
-            setMessage('Please select a role.');
-            return;
-        }
         if (password !== confirmPassword) {
             setMessage('Passwords do not match.');
             return;
@@ -64,7 +60,7 @@ const RegisterPage = () => {
         }
 
         // Call register function from context
-        const success = await register(name, email, password, role);
+        const success = await register(name, email, password, role); // Use selected role
 
         if (success) {
             // Registration automatically logs the user in via the context
@@ -89,7 +85,7 @@ const RegisterPage = () => {
                         <input
                             id="name" name="name" type="text" required value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="input-field" // Reusable class (optional, define below or keep inline)
+                            className="appearance-none block w-full px-3 py-2 bg-white border border-theme-purple-600 rounded-md shadow-sm text-black placeholder-gray-500 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out"
                             placeholder="Your Name"
                         />
                     </div>
@@ -102,7 +98,7 @@ const RegisterPage = () => {
                         <input
                             id="email" name="email" type="email" autoComplete="email" required value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="input-field"
+                            className="appearance-none block w-full px-3 py-2 bg-white border border-theme-purple-600 rounded-md shadow-sm text-black placeholder-gray-500 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -115,7 +111,7 @@ const RegisterPage = () => {
                         <input
                             id="password" name="password" type="password" autoComplete="new-password" required value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="input-field"
+                            className="appearance-none block w-full px-3 py-2 bg-white border border-theme-purple-600 rounded-md shadow-sm text-black placeholder-gray-500 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out"
                             placeholder="******** (min. 6 characters)"
                         />
                     </div>
@@ -128,26 +124,38 @@ const RegisterPage = () => {
                         <input
                             id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="input-field"
+                            className="appearance-none block w-full px-3 py-2 bg-white border border-theme-purple-600 rounded-md shadow-sm text-black placeholder-gray-500 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out"
                             placeholder="********"
                         />
                     </div>
 
-                    {/* Role Selection */}
+                    {/* Role Selection Dropdown */}
                     <div>
                         <label htmlFor="role-select-reg" className="block text-sm font-medium text-theme-purple-200 mb-1">
                             I am a...
                         </label>
-                        <select
-                            id="role-select-reg" required value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition-all duration-300"
-                            aria-label="Select your role"
-                        >
-                            <option value="" disabled>-- Select Role --</option>
-                            <option value="Car Owner">Car Owner</option>
-                            <option value="Journalist">Journalist</option>
-                        </select>                    </div>
+                        <div className="mt-1">
+                            <select
+                                id="role"
+                                name="role"
+                                value={role}
+                                onChange={e => setRole(e.target.value)}
+                                required
+                                className="block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition-all duration-300"
+                                aria-label="Select your role"
+                            >
+                                <option value="" disabled className="text-white bg-theme-black-800">
+                                    -- Select Role --
+                                </option>
+                                <option value="Car Owner" className="text-white bg-theme-black-800">
+                                    Car Owner
+                                </option>
+                                <option value="Journalist" className="text-white bg-theme-black-800">
+                                    Journalist
+                                </option>
+                            </select>
+                        </div>
+                    </div>
 
                     {/* Loading Indicator */}
                     {isLoading && <Spinner size="small" />}
@@ -181,7 +189,7 @@ const RegisterPage = () => {
                     <p className="text-center text-sm font-medium text-theme-purple-200 mb-2">
                         Sign up with Google using your selected role
                     </p>
-                    {role && <GoogleSignInButton role={role} />}
+                    <GoogleSignInButton role="Journalist" />
                 </div>
 
                 {/* --- Link to Login Page --- */}
@@ -195,9 +203,9 @@ const RegisterPage = () => {
                 </div>
             </div>
             {/* Basic reusable input style - can be moved to index.css */}
-            <style jsx>{`
+            <style jsx global>{`
         .input-field {
-          @apply appearance-none block w-full px-3 py-2 bg-theme-black-800 border border-theme-purple-600 rounded-md shadow-sm text-white placeholder-theme-black-400 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out;
+          @apply appearance-none block w-full px-3 py-2 bg-white border border-theme-purple-600 rounded-md shadow-sm text-black placeholder-gray-500 focus:outline-none focus:ring-theme-purple-500 focus:border-theme-purple-500 sm:text-sm transition duration-300 ease-in-out;
         }
       `}</style>
         </div>

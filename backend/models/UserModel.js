@@ -48,6 +48,76 @@ const userSchema = new mongoose.Schema(
             unique: true, // Ensures uniqueness if provided
             sparse: true, // Allows multiple documents to have null/undefined for this field, but enforces uniqueness when set
         },
+        // Profile Image URL
+        profileImage: {
+            type: String,
+            default: '',
+        },
+        // User Bio
+        bio: {
+            type: String,
+            default: '',
+        },
+        // Phone Number
+        phone: {
+            type: String,
+            default: '',
+        },
+        // Location
+        location: {
+            type: String,
+            default: '',
+        },
+        // Social Media Links
+        socialMedia: {
+            youtube: {
+                type: String,
+                default: '',
+            },
+            instagram: {
+                type: String,
+                default: '',
+            },
+            twitter: {
+                type: String,
+                default: '',
+            },
+            linkedin: {
+                type: String,
+                default: '',
+            },
+            website: {
+                type: String,
+                default: '',
+            },
+        },
+        // Journalist-specific fields
+        journalistInfo: {
+            publication: {
+                type: String,
+                default: '',
+            },
+            experience: {
+                type: Number,
+                default: 0,
+            },
+            specialization: {
+                type: String,
+                default: '',
+            },
+        },
+        // Car Owner-specific fields
+        ownerInfo: {
+            preferredContactMethod: {
+                type: String,
+                enum: ['email', 'phone', 'both'],
+                default: 'email',
+            },
+            businessName: {
+                type: String,
+                default: '',
+            },
+        },
     },
     {
         // Automatically adds 'createdAt' and 'updatedAt' fields
