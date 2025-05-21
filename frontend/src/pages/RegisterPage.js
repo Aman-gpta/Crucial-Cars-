@@ -6,6 +6,16 @@ import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 import Spinner from '../components/layout/Spinner'; // Import the Spinner component
 
 const RegisterPage = () => {
+    // --- Auth Context ---
+    const {
+        register,
+        // loginWithFirebase, // Not used in this component
+        userInfo, // Added userInfo
+        error: authError, // Keep alias for error state if preferred
+        setError, // Use setError directly
+        isLoading
+    } = useAuth();
+
     // --- Component State ---
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -13,15 +23,6 @@ const RegisterPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState(''); // Local messages (e.g., password mismatch)
     const [role, setRole] = useState(''); // New state for role selection
-
-    // --- Auth Context ---
-    const {
-        register,         // Function for email/password registration
-        userInfo,         // Current logged-in user info (or null)
-        isLoading,        // Boolean indicating if an auth operation is in progress
-        error: authError, // Holds error messages from auth operations
-        setError: setAuthError, // Function to clear errors in the context
-    } = useAuth();
 
     // --- Routing Hooks ---
     const navigate = useNavigate();
@@ -31,9 +32,9 @@ const RegisterPage = () => {
 
     // Effect to clear any previous auth errors when the page loads or changes
     useEffect(() => {
-        setAuthError(null);
-        setMessage(''); // Clear local messages too
-    }, [location, setAuthError]);
+        // Clear any auth errors when the component mounts or location changes
+        setError(null);
+    }, [location, setError]); // Dependency array includes setError (stable)
 
     // Effect to redirect the user if they are already logged in
     useEffect(() => {
@@ -46,7 +47,7 @@ const RegisterPage = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault(); // Prevent page reload
-        setAuthError(null); // Clear previous context errors
+        setError(null); // Clear previous context errors
         setMessage('');     // Clear previous local messages
 
         // Client-side validation

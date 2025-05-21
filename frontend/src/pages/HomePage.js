@@ -16,7 +16,7 @@ const HomePage = () => {
     const [error, setError] = useState('');
     const [featuredCars, setFeaturedCars] = useState([]);
 
-    // --- Filter State Variables ---
+    // --- Filter Variables ---
     const [filteredCars, setFilteredCars] = useState([]);
     const [filters, setFilters] = useState({
         make: '',

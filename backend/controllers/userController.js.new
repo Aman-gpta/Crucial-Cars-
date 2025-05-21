@@ -127,7 +127,6 @@ const authWithFirebase = async (req, res) => {
                 await user.save();
             }
             // NOTE: We trust the role already stored in our DB for existing users
-            console.log(`Firebase auth successful for existing user: ${user.name} (${user._id}) with role: ${user.role}`);
         } else {
             // User does not exist - create a new user in your DB
             user = await User.create({
@@ -137,7 +136,6 @@ const authWithFirebase = async (req, res) => {
                 role: role, // Assign role provided during signup
                 // No password needed/provided for Firebase users
             });
-            console.log(`Created new user via Firebase auth: ${user.name} (${user._id}) with role: ${user.role}`);
         }
 
         // Generate YOUR application's JWT
@@ -167,31 +165,15 @@ const authWithFirebase = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         // Check if req.user exists (set by auth middleware)
-        if (!req.user) {
+        if (!req.user || !req.user._id) {
             console.error('Missing user data in request');
             return res.status(401).json({ message: 'User authentication failed. Missing user data.' });
         }
-
-        if (!req.user._id) {
-            console.error('Missing user ID in request');
-            return res.status(401).json({ message: 'User authentication failed. Missing user ID.' });
-        }
         
         console.log(`Fetching profile for user ID: ${req.user._id}`);
-        console.log('Auth headers present:', !!req.headers.authorization);
-        console.log('User role from token:', req.user.role);
         
-        // Get user from database with robust error handling
-        let user;
-        try {
-            user = await User.findById(req.user._id);
-        } catch (dbError) {
-            console.error(`Database error when fetching user:`, dbError);
-            return res.status(500).json({ 
-                message: 'Database error when fetching profile', 
-                details: dbError.message 
-            });
-        }
+        // Get user from database
+        const user = await User.findById(req.user._id);
         
         if (!user) {
             console.error(`User with ID ${req.user._id} not found in database`);

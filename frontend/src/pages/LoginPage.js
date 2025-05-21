@@ -6,21 +6,19 @@ import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 import Spinner from '../components/layout/Spinner'; // Import the Spinner component
 
 const LoginPage = () => {
+    const { 
+        login, 
+        // loginWithFirebase, // Not used in this component
+        userInfo, // Added userInfo
+        error: authError, // Keep alias for error state if preferred
+        setError, // Use setError directly
+        isLoading 
+    } = useAuth();
+
     // --- Component State ---
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [selectedRole, setSelectedRole] = useState(''); // Role selection for Google Sign-Up
-
-    // --- Auth Context ---
-    // Get functions and state needed from the AuthContext
-    const {
-        login,              // Function for email/password login
-        loginWithFirebase,  // Function for Firebase login
-        userInfo,           // Current logged-in user info (or null)
-        isLoading,          // Boolean indicating if an auth operation is in progress
-        error: authError,   // Holds error messages from auth operations
-        setError: setAuthError, // Function to clear errors in the context
-    } = useAuth();
 
     // --- Routing Hooks ---
     const navigate = useNavigate();
@@ -30,8 +28,9 @@ const LoginPage = () => {
 
     // Effect to clear any previous auth errors when the page loads or changes
     useEffect(() => {
-        setAuthError(null);
-    }, [location, setAuthError]); // Dependency array includes setAuthError
+        // Clear any auth errors when the component mounts or location changes
+        setError(null);
+    }, [location, setError]); // Dependency array includes setError (stable)
 
     // Effect to redirect the user if they are already logged in
     useEffect(() => {
@@ -46,7 +45,7 @@ const LoginPage = () => {
     // Handle standard email/password form submission
     const handleEmailPasswordLogin = async (e) => {
         e.preventDefault(); // Prevent page reload
-        setAuthError(null); // Clear previous errors
+        setError(null); // Clear previous errors
         const success = await login(email, password); // Call login from context
         if (success) {
             // Navigation is handled by the useEffect hook watching userInfo

@@ -10,7 +10,15 @@ const protect = async (req, res, next) => {
     let token;
     
     console.log('Auth middleware triggered');
-    console.log('Headers:', JSON.stringify(req.headers));
+    console.log('Method:', req.method);
+    console.log('Path:', req.path);
+    
+    // Log authorization header presence without exposing the full token
+    if (req.headers.authorization) {
+        console.log('Authorization header is present');
+    } else {
+        console.log('No authorization header found');
+    }
 
     // 1. Check if the token exists in the Authorization header and starts with 'Bearer'
     if (
@@ -36,7 +44,7 @@ const protect = async (req, res, next) => {
             
             try {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                console.log(`Token verified for user ID: ${decoded.id}`);
+                console.log(`Token verified for user ID: ${decoded.id}, role: ${decoded.role}`);
                 
                 // 4. Find the user associated with the token's ID
                 //    Attach the user object to the request, excluding the password

@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { fetchCarsByOwner, updateCarAvailability } from '../../services/carService';
 import { fetchIncomingRequests, updateRequestStatus } from '../../services/requestService';
+import UserProfileModal from '../../components/users/UserProfileModal';
 
 const OwnerDashboardPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const { userInfo } = useAuth();
   const [loading, setLoading] = useState(true);
   const [cars, setCars] = useState([]);
@@ -18,6 +20,29 @@ const OwnerDashboardPage = () => {
     pendingRequests: 0,
   });
   const [error, setError] = useState('');
+  
+  // User profile modal state
+  const [profileModal, setProfileModal] = useState({
+    isOpen: false,
+    userId: null
+  });
+  
+  // Open profile modal
+  const openProfileModal = (userId) => {
+    setProfileModal({
+      isOpen: true,
+      userId
+    });
+  };
+  
+  // Close profile modal
+  const closeProfileModal = () => {
+    setProfileModal({
+      isOpen: false,
+      userId: null
+    });
+  };
+
   // Fetch owner's cars and requests
   useEffect(() => {
     const fetchOwnerData = async () => {
@@ -322,15 +347,17 @@ const OwnerDashboardPage = () => {
                     </tr>
                   </thead>                  <tbody className="divide-y-2 divide-theme-purple-800">
                     {requests.map(request => (
-                      <tr key={request._id} className="hover:bg-theme-black-850 transition-colors duration-150">
-                        <td className="py-5 px-6">
+                      <tr key={request._id} className="hover:bg-theme-black-850 transition-colors duration-150">                        <td className="py-5 px-6">
                           <div className="flex items-center">
                             <div className="w-10 h-10 rounded-full bg-theme-purple-700 flex items-center justify-center mr-3 text-white font-medium border border-theme-purple-500">
                               {request.journalist?.name?.charAt(0) || '?'}
                             </div>
-                            <span className="text-theme-purple-100 font-medium">
+                            <button 
+                              onClick={() => openProfileModal(request.journalist?._id)}
+                              className="text-theme-purple-100 font-medium hover:text-theme-purple-300 transition-colors"
+                            >
                               {request.journalist?.name || 'Unknown'}
-                            </span>
+                            </button>
                           </div>
                         </td>
                         <td className="py-5 px-6">
@@ -468,8 +495,7 @@ const OwnerDashboardPage = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
                               Test drive completed
-                            </span>
-                          )}
+                            </span>                          )}
                         </td>
                       </tr>
                     ))}
@@ -479,6 +505,13 @@ const OwnerDashboardPage = () => {
             )}
           </div>
         )}
+        
+        {/* User Profile Modal */}
+        <UserProfileModal 
+          isOpen={profileModal.isOpen} 
+          onClose={closeProfileModal}
+          userId={profileModal.userId}
+        />
       </div>
     </div>
   );

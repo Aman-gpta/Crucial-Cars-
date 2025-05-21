@@ -17,11 +17,13 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/firebase-auth', authWithFirebase);
-router.get('/:id', getUserPublicProfile);
 
 // Protected routes
 router.route('/profile')
     .get(protect, getUserProfile)
     .put(protect, updateUserProfile);
+
+// Public route for specific user profiles (must be after /profile)
+router.get('/:id', getUserPublicProfile);
 
 export default router;

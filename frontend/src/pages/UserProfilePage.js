@@ -62,7 +62,8 @@ const UserProfilePage = () => {
                     const profileData = await getPublicUserProfile(profileId);
                     
                     if (profileData) {
-                        console.log("Public profile data loaded successfully");
+                        console.log("Public profile data loaded successfully:", profileData);
+                        console.log("Public profile user role:", profileData.role);
                         setProfileOwner(profileData);
                     } else {
                         console.log("No profile data found, navigating to 404");
@@ -70,12 +71,44 @@ const UserProfilePage = () => {
                     }
                 } else {
                     // This is the user's own profile
-                    console.log("Loading user's own profile");
-                    try {
+                    console.log("Loading user's own profile", userInfo);
+                    console.log("User role from userInfo:", userInfo?.role);
+                      try {
+                        console.log("About to call getUserProfile with token:", 
+                            userInfo?.token ? `${userInfo.token.substring(0, 10)}...` : "No token");
+                        
                         const profileData = await getUserProfile();
                         
                         if (profileData) {
-                            console.log("User profile data loaded successfully");
+                            console.log("User profile data loaded successfully:", profileData);
+                            console.log("User role from profile data:", profileData.role);
+                            console.log("Role-specific data:", 
+                                profileData.role === 'Journalist' ? 
+                                    JSON.stringify(profileData.journalistInfo) : 
+                                    JSON.stringify(profileData.ownerInfo)
+                            );
+                            
+                            // Initialize default values for role-specific data
+                            const initialJournalistInfo = {
+                                publication: '',
+                                experience: 0,
+                                specialization: ''
+                            };
+                            
+                            const initialOwnerInfo = {
+                                preferredContactMethod: 'email',
+                                businessName: ''
+                            };
+                            
+                            // Determine which role-specific data to use based on user role
+                            const journalistData = profileData.role === 'Journalist' ? 
+                                profileData.journalistInfo || initialJournalistInfo : 
+                                initialJournalistInfo;
+                                
+                            const ownerData = profileData.role === 'Car Owner' ? 
+                                profileData.ownerInfo || initialOwnerInfo : 
+                                initialOwnerInfo;
+                            
                             setFormData(prevData => ({
                                 // Use functional update to avoid dependency on formData
                                 ...prevData,
@@ -93,21 +126,20 @@ const UserProfilePage = () => {
                                     linkedin: profileData.socialMedia?.linkedin || '',
                                     website: profileData.socialMedia?.website || ''
                                 },
-                                journalistInfo: {
-                                    publication: profileData.journalistInfo?.publication || '',
-                                    experience: profileData.journalistInfo?.experience || 0,
-                                    specialization: profileData.journalistInfo?.specialization || ''
-                                },
-                                ownerInfo: {
-                                    preferredContactMethod: profileData.ownerInfo?.preferredContactMethod || 'email',
-                                    businessName: profileData.ownerInfo?.businessName || ''
-                                },
+                                journalistInfo: journalistData,
+                                ownerInfo: ownerData,
                                 password: '',
                                 confirmPassword: ''
                             }));
                         } else {
-                            console.log("No profile data retrieved");
-                            setError("Failed to load profile data. Please try refreshing the page.");
+                            console.log("No profile data retrieved from getUserProfile call");
+                            // If AuthContext.error is not already set by getUserProfile,
+                            // then set a generic one. 'error' here is the destructured error state from useAuth().
+                            if (!error) { 
+                                setError("Failed to load profile data. Please try refreshing the page.");
+                            }
+                            // If 'error' is already set, it means getUserProfile encountered an issue
+                            // and provided a more specific error message, which we should preserve.
                         }
                     } catch (profileErr) {
                         console.error("Error in profile data retrieval:", profileErr);
@@ -186,12 +218,23 @@ const UserProfilePage = () => {
             delete submissionData.password;
         }
         
+        // Clean up role-specific data to only send relevant fields based on user role
+        if (submissionData.role === 'Journalist') {
+            // Keep journalistInfo, remove ownerInfo for journalists
+            delete submissionData.ownerInfo;
+        } else if (submissionData.role === 'Car Owner') {
+            // Keep ownerInfo, remove journalistInfo for car owners
+            delete submissionData.journalistInfo;
+        }
+        
+        console.log('Submitting profile update with data:', submissionData);
         setLoading(true);
         
         try {
             const result = await updateUserProfile(submissionData);
             
             if (result.success) {
+                console.log('Profile updated successfully!');
                 setUpdateSuccess("Profile updated successfully!");
                 
                 // Reset password fields
@@ -217,7 +260,7 @@ const UserProfilePage = () => {
     const placeholderStyle = "placeholder:text-gray-600";
     
     // Form section style
-    const sectionStyle = "p-5 border border-theme-purple-700 rounded-lg bg-theme-black-800 bg-opacity-70 backdrop-filter backdrop-blur-sm mb-5";
+    // const sectionStyle = "p-5 border border-theme-purple-700 rounded-lg bg-theme-black-800 bg-opacity-70 backdrop-filter backdrop-blur-sm mb-5";
     
     // Label style
     const labelStyle = "block text-sm font-medium text-theme-purple-200 mb-1";
@@ -246,8 +289,7 @@ const UserProfilePage = () => {
             </div>
         );
     }
-    
-    // Display errors if any
+      // Display errors if any
     if (error && !isPublicProfile) {
         return (
             <div className="container mx-auto px-4 py-8">
@@ -257,12 +299,24 @@ const UserProfilePage = () => {
                         <p className="text-red-400 mb-6 p-3 bg-red-900 bg-opacity-20 rounded-md border border-red-700">
                             {error}
                         </p>
-                        <div className="mt-6">
+                        <div className="flex justify-center space-x-4 mt-6">
+                            <button 
+                                onClick={() => window.location.reload()}
+                                className="px-4 py-2 rounded-md bg-theme-purple-800 text-white hover:bg-theme-purple-700 transition-colors"
+                            >
+                                Try Again
+                            </button>
                             <Link 
                                 to="/login" 
                                 className="px-4 py-2 rounded-md bg-theme-purple-600 text-white hover:bg-theme-purple-700 transition-colors"
                             >
                                 Back to Login
+                            </Link>
+                            <Link 
+                                to="/" 
+                                className="px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition-colors"
+                            >
+                                Go to Home
                             </Link>
                         </div>
                     </div>
@@ -425,32 +479,40 @@ const UserProfilePage = () => {
                 <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-purple-gradient mb-6">Your Profile</h1>
 
                 {/* Profile Header with Image and Basic Info */}
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-theme-purple-600 shadow-purple-glow">
-                        <img 
-                            src={formData.profileImage || "https://via.placeholder.com/150?text=Profile"} 
-                            alt={formData.name}
-                            className="w-full h-full object-cover" 
-                        />
+                <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+                    <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-theme-purple-600 shadow-purple-glow mr-0 md:mr-4 mb-4 md:mb-0">
+                            <img 
+                                src={formData.profileImage || "https://via.placeholder.com/150?text=Profile"}
+                                alt={formData.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-theme-purple-300 text-center md:text-left">{formData.name}</h1>
+                            <p className="text-gray-400 text-center md:text-left">{formData.email}</p>
+                            <div className="inline-block px-3 py-1 rounded-full text-sm bg-theme-purple-900 text-theme-purple-300 border border-theme-purple-700 mt-2">
+                                {formData.role || 'Loading...'}
+                            </div>
+                        </div>
                     </div>
                     
-                    <div className="flex-1">
-                        <h2 className="text-2xl font-semibold text-theme-purple-300 mb-2">{formData.name}</h2>
-                        <p className="text-theme-purple-400 mb-1">{formData.email}</p>
-                        <span className="inline-block px-3 py-1 rounded-full text-sm bg-theme-purple-900 text-theme-purple-300 border border-theme-purple-700">
-                            {formData.role}
-                        </span>
-                        
-                        {/* View Public Profile Link */}
-                        <div className="mt-4">
-                            <Link 
-                                to={`/profile/${userInfo._id}`} 
-                                className="text-theme-purple-400 hover:text-theme-purple-300 transition-colors"
-                            >
-                                <i className="fas fa-eye mr-2"></i>
-                                View Public Profile
-                            </Link>
-                        </div>
+                    <div className="mt-4 md:mt-0">
+                        <button 
+                            onClick={() => fileInputRef.current.click()}
+                            type="button"
+                            className="gradient-button text-white font-medium py-2 px-4 rounded transition-all duration-300 flex items-center"
+                        >
+                            <i className="fas fa-camera mr-2"></i>
+                            Change Photo
+                        </button>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            onChange={handleImageChange} 
+                            className="hidden" 
+                            accept="image/*"
+                        />
                     </div>
                 </div>
 
@@ -748,6 +810,12 @@ const UserProfilePage = () => {
                             {formData.role === 'Journalist' ? (
                                 // Journalist Info
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="md:col-span-2">
+                                        <p className="text-theme-purple-400 mb-4">
+                                            <i className="fas fa-info-circle mr-2"></i>
+                                            As a Journalist, you can provide information about your professional background.
+                                        </p>
+                                    </div>
                                     <div>
                                         <label htmlFor="journalistInfo.publication" className={labelStyle}>
                                             Publication/Media House
@@ -756,7 +824,7 @@ const UserProfilePage = () => {
                                             type="text"
                                             id="journalistInfo.publication"
                                             name="journalistInfo.publication"
-                                            value={formData.journalistInfo.publication}
+                                            value={formData.journalistInfo?.publication || ''}
                                             onChange={handleChange}
                                             placeholder="e.g., AutoCar India, Car & Bike, etc."
                                             className={`${inputFieldStyle} ${placeholderStyle}`}
@@ -771,7 +839,7 @@ const UserProfilePage = () => {
                                             type="number"
                                             id="journalistInfo.experience"
                                             name="journalistInfo.experience"
-                                            value={formData.journalistInfo.experience}
+                                            value={formData.journalistInfo?.experience || 0}
                                             onChange={handleChange}
                                             min="0"
                                             max="100"
@@ -781,33 +849,39 @@ const UserProfilePage = () => {
                                     
                                     <div className="md:col-span-2">
                                         <label htmlFor="journalistInfo.specialization" className={labelStyle}>
-                                            Specialization/Focus Area
+                                            Specialization/Areas of Focus
                                         </label>
                                         <input
                                             type="text"
                                             id="journalistInfo.specialization"
                                             name="journalistInfo.specialization"
-                                            value={formData.journalistInfo.specialization}
+                                            value={formData.journalistInfo?.specialization || ''}
                                             onChange={handleChange}
-                                            placeholder="e.g., Luxury Cars, Motorcycles, Electric Vehicles, etc."
+                                            placeholder="e.g., Performance Cars, EV Trends, Classic Cars, etc."
                                             className={`${inputFieldStyle} ${placeholderStyle}`}
                                         />
                                     </div>
                                 </div>
-                            ) : (
+                            ) : formData.role === 'Car Owner' ? (
                                 // Car Owner Info
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="md:col-span-2">
+                                        <p className="text-theme-purple-400 mb-4">
+                                            <i className="fas fa-info-circle mr-2"></i>
+                                            As a Car Owner, you can provide details that will help journalists reach you.
+                                        </p>
+                                    </div>
                                     <div>
                                         <label htmlFor="ownerInfo.businessName" className={labelStyle}>
-                                            Business Name (Optional)
+                                            Business Name (if applicable)
                                         </label>
                                         <input
                                             type="text"
                                             id="ownerInfo.businessName"
                                             name="ownerInfo.businessName"
-                                            value={formData.ownerInfo.businessName}
+                                            value={formData.ownerInfo?.businessName || ''}
                                             onChange={handleChange}
-                                            placeholder="e.g., Premium Cars Collection, etc."
+                                            placeholder="e.g., Vintage Motors, PremiumDrives, etc."
                                             className={`${inputFieldStyle} ${placeholderStyle}`}
                                         />
                                     </div>
@@ -819,15 +893,20 @@ const UserProfilePage = () => {
                                         <select
                                             id="ownerInfo.preferredContactMethod"
                                             name="ownerInfo.preferredContactMethod"
-                                            value={formData.ownerInfo.preferredContactMethod}
+                                            value={formData.ownerInfo?.preferredContactMethod || 'email'}
                                             onChange={handleChange}
                                             className={selectFieldStyle}
                                         >
                                             <option value="email">Email</option>
                                             <option value="phone">Phone</option>
-                                            <option value="both">Both Email and Phone</option>
+                                            <option value="both">Both Email & Phone</option>
                                         </select>
                                     </div>
+                                </div>
+                            ) : (
+                                // Fallback for unknown role
+                                <div className="bg-theme-black-900 bg-opacity-60 border border-theme-purple-700 p-4 rounded-md">
+                                    <p className="text-theme-purple-300">Role-specific information is not available for your account type.</p>
                                 </div>
                             )}
                         </div>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import api from '../services/api'; // Use our configured API service instead of direct axios
 
 // --- Create Context ---
@@ -22,8 +22,10 @@ export const AuthProvider = ({ children }) => {
             }
         }
         setLoading(false); // Finished loading initial state
-    }, []); // Empty dependency array means run only once on mount    // --- Login Function ---
-    const login = async (email, password) => {
+    }, []); // Empty dependency array means run only once on mount
+
+    // --- Login Function ---
+    const login = useCallback(async (email, password) => {
         setLoading(true);
         setError(null);
         try {            
@@ -86,10 +88,10 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return false; // Indicate failure
         }
-    };
+    }, []);
 
     // --- Register Function ---
-    const register = async (name, email, password, role) => {
+    const register = useCallback(async (name, email, password, role) => {
         setLoading(true);
         setError(null);
         try {
@@ -112,15 +114,21 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return false; // Indicate failure
         }
-    };
-
+    }, []);
+    
     // --- Logout Function ---
-    const logout = () => {
+    const logout = useCallback(() => {
+        // Save that we're logging out explicitly (not expired)
+        localStorage.setItem('explicitLogout', 'true');
         localStorage.removeItem('userInfo');
         setUserInfo(null);
+        setError(null); // Clear any errors on logout
+        console.log('User logged out successfully');
         // Optionally redirect here or let components handle redirect
-    };    // --- Firebase Auth Function ---
-    const loginWithFirebase = async (firebaseToken, role) => {
+    }, []);
+    
+    // --- Firebase Auth Function ---
+    const loginWithFirebase = useCallback(async (firebaseToken, role) => {
         setLoading(true);
         setError(null);
         try {
@@ -142,26 +150,37 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return false;
         }
-    };    // --- Get User Profile ---
-    const getUserProfile = async () => {
-        setLoading(true);
+    }, []);
+    
+    // --- Get User Profile ---
+    const getUserProfile = useCallback(async () => {
+        // setLoading(true); // setLoading is managed by the caller or specific effects
         setError(null);
         try {
-            // Check if user is authenticated
-            if (!userInfo || !userInfo.token) {
-                console.error("User not authenticated: No userInfo or token");
+            // Check if user is authenticated and token exists
+            if (!userInfo) {
+                console.error("User not authenticated: No userInfo");
                 setError("Please log in to view your profile.");
-                setLoading(false);
+                // setLoading(false);
+                return null;
+            }
+            
+            if (!userInfo.token) {
+                console.error("User authenticated but no token found");
+                setError("Authentication token missing. Please log in again.");
+                localStorage.removeItem('userInfo');
+                setUserInfo(null);
+                // setLoading(false);
                 return null;
             }
             
             console.log("Making request to /users/profile with token");
+            console.log("User ID:", userInfo._id);
+            console.log("User Role:", userInfo.role);
             
-            // Authorization header is added automatically by the api interceptor
-            // Make API call to get profile data
             const { data } = await api.get('/users/profile');
-            console.log("Profile data retrieved successfully");
-            setLoading(false);
+            console.log("Profile data retrieved successfully:", data);
+            // setLoading(false);
             return data;
         } catch (err) {
             console.error("Error in getUserProfile:", err);
@@ -175,19 +194,27 @@ export const AuthProvider = ({ children }) => {
                 setError("Your session has expired. Please log in again.");
             } else if (err.response && err.response.status === 404) {
                 setError("User profile not found. Please check your account.");
-            } else if (err.response && err.response.data.message) {
+            } else if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
+                console.error("Server error message:", err.response.data.message);
+                if (err.response.data.details) {
+                    console.error("Error details:", err.response.data.details);
+                }
             } else if (err.message) {
                 setError(err.message);
+                console.error("Error message:", err.message);
             } else {
                 setError("Failed to load profile. Please try again later.");
+                console.error("Unknown error occurred");
             }
             
-            setLoading(false);
+            // setLoading(false);
             return null;
         }
-    };// --- Update User Profile ---
-    const updateUserProfile = async (profileData) => {
+    }, [userInfo]);
+    
+    // --- Update User Profile ---
+    const updateUserProfile = useCallback(async (profileData) => {
         setLoading(true);
         setError(null);
         try {
@@ -197,8 +224,9 @@ export const AuthProvider = ({ children }) => {
             const { data } = await api.put('/users/profile', profileData);
             
             // Update the stored user info with new data
-            setUserInfo(data);
-            localStorage.setItem('userInfo', JSON.stringify(data));
+            // Important: use functional update for setUserInfo if new data depends on old userInfo
+            setUserInfo(prevUserInfo => ({...prevUserInfo, ...data})); // Assuming data contains the updated user fields and token
+            localStorage.setItem('userInfo', JSON.stringify(data)); // data should contain the complete user object including token
             
             setLoading(false);
             return { success: true, data };
@@ -211,19 +239,20 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return { success: false, message };
         }
-    };    // --- Get Public User Profile ---
-    const getPublicUserProfile = async (userId) => {
-        setLoading(true);
+    }, [setUserInfo]);
+    
+    // --- Get Public User Profile ---
+    const getPublicUserProfile = useCallback(async (userId) => {
+        // setLoading(true); // setLoading is managed by the caller or specific effects
         setError(null);
         try {
             console.log(`Fetching public profile for user ID: ${userId}`);
             const { data } = await api.get(`/users/${userId}`);
             console.log(`Public profile data retrieved successfully for user ID: ${userId}`);
-            setLoading(false);
+            // setLoading(false);
             return data;
         } catch (err) {
             console.error(`Error fetching public profile:`, err);
-            
             if (err.response && err.response.status === 404) {
                 setError("User not found. The profile may have been deleted or is unavailable.");
             } else if (err.response && err.response.data.message) {
@@ -233,39 +262,37 @@ export const AuthProvider = ({ children }) => {
             } else {
                 setError("Failed to load profile. Please try again later.");
             }
-            
-            setLoading(false);
             return null;
         }
-    };
+    }, []);
 
     // --- Define isAuthenticated ---
-    const isAuthenticated = !!userInfo; // Converts userInfo to a boolean (true if userInfo exists, false otherwise)    // --- Value Provided by Context ---
+    const isAuthenticated = !!userInfo?.token; // Simplified check for token existence
+
+    // --- Provide Auth Context Value ---
     const value = {
         userInfo,
-        loading, // expose loading state
-        error,   // expose error state
+        loading,
+        error,
         login,
-        logout,
         register,
+        logout,
         loginWithFirebase,
         getUserProfile,
         updateUserProfile,
         getPublicUserProfile,
-        setError,         // expose function to clear errors
-        isLoading: loading,
-        isAuthenticated   // Use the defined isAuthenticated
+        setError, // Add setError to the context value
+        isAuthenticated,
     };
 
-    // Render children wrapped by the provider, passing the value
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-// --- Custom Hook to Consume Context ---
-// This is what components import to use the context values
+// --- Custom Hook to Use Auth Context ---
 export const useAuth = () => {
     return useContext(AuthContext);
 };
-
-// --- Export Context (Optional, mainly for structure) ---
-export default AuthContext;

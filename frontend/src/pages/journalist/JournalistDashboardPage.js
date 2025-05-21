@@ -4,8 +4,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { fetchCars } from '../../services/carService';
 import { fetchOutgoingRequests, createTestDriveRequest, withdrawTestDriveRequest } from '../../services/requestService';
+import UserProfileModal from '../../components/users/UserProfileModal';
 
 const JournalistDashboardPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const { userInfo } = useAuth();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
@@ -20,13 +22,36 @@ const JournalistDashboardPage = () => {
     rejectedRequests: 0
   });
 
+  // User profile modal state
+  const [profileModal, setProfileModal] = useState({
+    isOpen: false,
+    userId: null
+  });
+  
+  // Open profile modal
+  const openProfileModal = (userId) => {
+    setProfileModal({
+      isOpen: true,
+      userId
+    });
+  };
+  
+  // Close profile modal
+  const closeProfileModal = () => {
+    setProfileModal({
+      isOpen: false,
+      userId: null
+    });
+  };
   // New request form state
+  // eslint-disable-next-line no-unused-vars
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [selectedCar, setSelectedCar] = useState('');  const [requestMessage, setRequestMessage] = useState('');
   const [requestDate, setRequestDate] = useState('');
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   // State for selected car details (when coming from car details page)
+  // eslint-disable-next-line no-unused-vars
   const [selectedCarDetails, setSelectedCarDetails] = useState(null);
   // Confirmation dialog state
   const [confirmDialog, setConfirmDialog] = useState({
@@ -212,8 +237,8 @@ const JournalistDashboardPage = () => {
       setConfirmDialog({ open: false, requestId: null, message: '' });
     }
   };
-
   // Get status badge class
+  // eslint-disable-next-line no-unused-vars
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case 'Pending':
@@ -385,9 +410,12 @@ const JournalistDashboardPage = () => {
                             <div className="w-8 h-8 rounded-full bg-theme-purple-700 flex items-center justify-center mr-3 text-white font-medium border border-theme-purple-500">
                               {request.owner?.name?.charAt(0) || '?'}
                             </div>
-                            <span className="text-theme-purple-100 font-medium">
+                            <button
+                              onClick={() => openProfileModal(request.owner?._id)}
+                              className="text-theme-purple-100 font-medium hover:text-theme-purple-300 transition-colors"
+                            >
                               {request.owner?.name || 'Unknown Owner'}
-                            </span>
+                            </button>
                           </div>
                         </td>
                         <td className="py-5 px-6">
@@ -708,6 +736,12 @@ const JournalistDashboardPage = () => {
           </div>
         </div>
       )}
+        {/* User Profile Modal */}
+      <UserProfileModal 
+        isOpen={profileModal.isOpen}
+        userId={profileModal.userId}
+        onClose={closeProfileModal}
+      />
     </div>
   );
 };

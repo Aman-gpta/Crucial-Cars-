@@ -24,6 +24,8 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const userInfoString = localStorage.getItem('userInfo'); // Get stored user info
+        console.log('Request URL:', config.url);
+        console.log('Request method:', config.method);
 
         if (userInfoString) {
             try {
@@ -33,8 +35,13 @@ api.interceptors.request.use(
                     console.log('Adding auth token to request:', config.url);
                     config.headers['Authorization'] = `Bearer ${userInfo.token}`;
                     console.log(`Token (first 15 chars): ${userInfo.token.substring(0, 15)}...`);
+                    console.log('User role from stored info:', userInfo.role);
                 } else {
                     console.warn('User info found but no token available:', userInfo);
+                    // Try to get user to re-login if token is missing
+                    if (config.url.includes('/profile') && !config.url.includes('public')) {
+                        window.location.href = '/login?redirect=profile&reason=missing_token';
+                    }
                 }
             } catch (e) {
                 console.error("Error parsing user info for interceptor:", e);
