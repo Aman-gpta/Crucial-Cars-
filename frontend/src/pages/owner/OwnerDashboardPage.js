@@ -266,12 +266,27 @@ const OwnerDashboardPage = () => {
                   </thead>
                   <tbody className="divide-y divide-theme-purple-900">
                     {cars.map(car => (
-                      <tr key={car._id} className="hover:bg-theme-black-700 transition duration-150">
-                        <td className="py-4 px-4">
+                      <tr key={car._id} className="hover:bg-theme-black-700 transition duration-150">                        <td className="py-4 px-4">
                           <img
-                            src={car.image || 'https://via.placeholder.com/100x70.png?text=No+Image'}
+                            src={car.image 
+                              ? (car.image.startsWith('http') 
+                                  ? car.image 
+                                  : `http://localhost:5000${car.image.startsWith('/uploads') 
+                                      ? car.image 
+                                      : `/uploads/${car.image}`}`) 
+                              : (car.images && car.images.length > 0 
+                                  ? (car.images[0].startsWith('http')
+                                      ? car.images[0]
+                                      : `http://localhost:5000${car.images[0].startsWith('/uploads')
+                                          ? car.images[0]
+                                          : `/uploads/${car.images[0]}`}`)
+                                  : 'https://via.placeholder.com/100x70.png?text=No+Image')}
                             alt={`${car.make} ${car.model}`}
                             className="w-24 h-16 object-cover rounded border border-theme-purple-700"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'https://via.placeholder.com/100x70.png?text=No+Image';
+                            }}
                           />
                         </td>
                         <td className="py-4 px-4">
@@ -362,10 +377,21 @@ const OwnerDashboardPage = () => {
                         </td>
                         <td className="py-5 px-6">
                           {request.car ? (
-                            <div className="flex items-center">
-                              <div className="relative h-16 w-24 overflow-hidden rounded-md mr-4 border-2 border-theme-purple-600 shadow-sm">
+                            <div className="flex items-center">                              <div className="relative h-16 w-24 overflow-hidden rounded-md mr-4 border-2 border-theme-purple-600 shadow-sm">
                                 <img 
-                                  src={request.car.image || 'https://via.placeholder.com/96x64.png?text=No+Image'}
+                                  src={request.car.image 
+                                    ? (request.car.image.startsWith('http') 
+                                        ? request.car.image 
+                                        : `http://localhost:5000${request.car.image.startsWith('/uploads') 
+                                            ? request.car.image 
+                                            : `/uploads/${request.car.image}`}`) 
+                                    : (request.car.images && request.car.images.length > 0 
+                                        ? (request.car.images[0].startsWith('http')
+                                            ? request.car.images[0]
+                                            : `http://localhost:5000${request.car.images[0].startsWith('/uploads')
+                                                ? request.car.images[0]
+                                                : `/uploads/${request.car.images[0]}`}`)
+                                        : 'https://via.placeholder.com/96x64.png?text=No+Image')}
                                   alt={`${request.car.make} ${request.car.model}`}
                                   className="h-full w-full object-cover hover:scale-110 transition-transform duration-500" 
                                   onError={(e) => {

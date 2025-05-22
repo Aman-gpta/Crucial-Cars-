@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { createCar } from '../services/carService';
 
-const CreateCarPage = () => {
-    // Navigation hook for redirecting after form submission
+const CreateCarPage = () => {    // Navigation hook for redirecting after form submission
     const navigate = useNavigate();
 
     // Get authentication context for user info
+    // eslint-disable-next-line no-unused-vars
     const { userInfo } = useAuth();
 
     // Reference to the file input element
@@ -26,11 +26,9 @@ const CreateCarPage = () => {
         fuelType: 'Petrol',
         description: '',
         location: ''
-    });
-
-    // State for the image file
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    });    // State for the image files
+    const [imageFiles, setImageFiles] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
 
     // State for form submission
     const [loading, setLoading] = useState(false);
@@ -44,17 +42,15 @@ const CreateCarPage = () => {
             ...formData,
             [name]: value
         });
-    };
-
-    // Handle image file selection
+    };    // Handle image file selection
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            setImageFiles(files);
 
-            // Create a preview URL for the selected image
-            const previewUrl = URL.createObjectURL(file);
-            setImagePreview(previewUrl);
+            // Create preview URLs for the selected images
+            const previews = files.map(file => URL.createObjectURL(file));
+            setImagePreviews(previews);
         }
     };
 
@@ -64,21 +60,24 @@ const CreateCarPage = () => {
         setLoading(true);
         setError('');
 
-        if (!imageFile) {
-            setError('Please select an image for your car');
+        if (imageFiles.length === 0) {
+            setError('Please select at least one image for your car');
             setLoading(false);
             return;
         }
 
-        try {
-            // Create FormData object to handle file upload
+        try {            // Create FormData object to handle file upload
             const carFormData = new FormData();
 
             // Add all form fields to FormData
             Object.keys(formData).forEach(key => {
                 carFormData.append(key, formData[key]);
-            });            // Add the image file
-            carFormData.append('image', imageFile);
+            });
+            
+            // Add all image files with the field name 'images'
+            imageFiles.forEach(file => {
+                carFormData.append('images', file);
+            });
             
             // Send request to backend using carService
             await createCar(carFormData);
@@ -294,36 +293,63 @@ const CreateCarPage = () => {
                             className="mt-1 block w-full rounded-md bg-theme-black-800 border-theme-purple-600 text-white shadow-sm focus:border-theme-purple-500 focus:ring-theme-purple-500"
                             placeholder="e.g. New York, NY"
                         />
-                    </div>
-
-                    {/* Car Image Upload */}
+                    </div>                    {/* Car Images Upload */}
                     <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-theme-purple-300 mb-2">
-                            Car Image *
+                            Car Images * (Up to 5)
                         </label>
 
                         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-theme-purple-600 rounded-md bg-theme-black-800 bg-opacity-50">
-                            <div className="space-y-1 text-center">
-                                {imagePreview ? (
+                            <div className="space-y-1 text-center w-full">
+                                {imagePreviews.length > 0 ? (
                                     <div>
-                                        <img
-                                            src={imagePreview}
-                                            alt="Car preview"
-                                            className="mx-auto h-40 w-auto object-cover rounded border border-theme-purple-500 shadow-purple-glow"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setImageFile(null);
-                                                setImagePreview(null);
-                                                if (fileInputRef.current) {
-                                                    fileInputRef.current.value = '';
-                                                }
-                                            }}
-                                            className="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-400 bg-red-900 bg-opacity-50 hover:bg-red-900 hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-300"
-                                        >
-                                            Remove
-                                        </button>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                            {imagePreviews.map((preview, index) => (
+                                                <div key={index} className="relative">
+                                                    <img
+                                                        src={preview}
+                                                        alt={`Car preview ${index + 1}`}
+                                                        className="h-32 w-full object-cover rounded border border-theme-purple-500 shadow-purple-glow"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newPreviews = [...imagePreviews];
+                                                            const newFiles = [...imageFiles];
+                                                            newPreviews.splice(index, 1);
+                                                            newFiles.splice(index, 1);
+                                                            setImagePreviews(newPreviews);
+                                                            setImageFiles(newFiles);
+                                                        }}
+                                                        className="absolute top-1 right-1 bg-red-700 text-white rounded-full p-1 hover:bg-red-800 transition-colors"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {imagePreviews.length < 5 && (
+                                            <div className="mt-4">
+                                                <label
+                                                    htmlFor="image-upload"
+                                                    className="cursor-pointer bg-theme-black-700 rounded-md font-medium text-theme-purple-400 hover:text-theme-purple-300 px-4 py-2 border border-theme-purple-600 hover:border-theme-purple-500 transition-colors duration-300"
+                                                >
+                                                    <span>Add more images</span>
+                                                    <input
+                                                        id="image-upload"
+                                                        name="image-upload"
+                                                        type="file"
+                                                        ref={fileInputRef}
+                                                        className="sr-only"
+                                                        accept="image/png, image/jpeg, image/jpg"
+                                                        onChange={handleImageChange}
+                                                        multiple
+                                                    />
+                                                </label>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div>
@@ -341,29 +367,29 @@ const CreateCarPage = () => {
                                                 strokeLinejoin="round"
                                             />
                                         </svg>
-                                        <p className="text-xs text-theme-purple-400">
-                                            PNG, JPG, JPEG up to 5MB
+                                        <p className="text-xs text-theme-purple-400 mt-2">
+                                            PNG, JPG, JPEG up to 5MB (Select up to 5 images)
                                         </p>
+                                        <div className="flex justify-center mt-4">
+                                            <label
+                                                htmlFor="image-upload"
+                                                className="cursor-pointer bg-theme-black-700 rounded-md font-medium text-theme-purple-400 hover:text-theme-purple-300 px-4 py-2 border border-theme-purple-600 hover:border-theme-purple-500 transition-colors duration-300"
+                                            >
+                                                <span>Upload images</span>
+                                                <input
+                                                    id="image-upload"
+                                                    name="image-upload"
+                                                    type="file"
+                                                    ref={fileInputRef}
+                                                    className="sr-only"
+                                                    accept="image/png, image/jpeg, image/jpg"
+                                                    onChange={handleImageChange}
+                                                    multiple
+                                                />
+                                            </label>
+                                        </div>
                                     </div>
                                 )}
-
-                                <div className="flex text-sm text-gray-600 justify-center">
-                                    <label
-                                        htmlFor="image-upload"
-                                        className="relative cursor-pointer bg-theme-black-800 rounded-md font-medium text-theme-purple-400 hover:text-theme-purple-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-theme-purple-500 transition-colors duration-300"
-                                    >
-                                        <span>{imagePreview ? 'Change image' : 'Upload an image'}</span>
-                                        <input
-                                            id="image-upload"
-                                            name="image-upload"
-                                            type="file"
-                                            ref={fileInputRef}
-                                            className="sr-only"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onChange={handleImageChange}
-                                        />
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>

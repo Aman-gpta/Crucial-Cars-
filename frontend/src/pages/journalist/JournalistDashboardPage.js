@@ -372,18 +372,24 @@ const JournalistDashboardPage = () => {
                   </thead>                  <tbody className="divide-y-2 divide-theme-purple-800">
                     {requests.map(request => (
                       <tr key={request._id} className="hover:bg-theme-black-850 transition-colors duration-150">
-                        <td className="py-5 px-6 font-medium text-white">
-                          {request.car ? (
+                        <td className="py-5 px-6 font-medium text-white">                          {request.car ? (
                             <div className="flex items-center">
-                              {request.car.image && (
+                              {request.car.image || (request.car.images && request.car.images.length > 0) ? (
                                 <div className="relative h-16 w-24 overflow-hidden rounded-md mr-4 border-2 border-theme-purple-600 shadow-sm">
                                   <img 
-                                    src={request.car.image.startsWith('http') 
-                                      ? request.car.image 
-                                      : request.car.image.startsWith('/uploads/')
-                                        ? `http://localhost:5000${request.car.image}`
-                                        : `http://localhost:5000/uploads/${request.car.image}`
-                                    } 
+                                    src={request.car.image 
+                                      ? (request.car.image.startsWith('http') 
+                                          ? request.car.image 
+                                          : `http://localhost:5000${request.car.image.startsWith('/uploads') 
+                                              ? request.car.image 
+                                              : `/uploads/${request.car.image}`}`) 
+                                      : (request.car.images && request.car.images.length > 0 
+                                          ? (request.car.images[0].startsWith('http')
+                                              ? request.car.images[0]
+                                              : `http://localhost:5000${request.car.images[0].startsWith('/uploads')
+                                                  ? request.car.images[0]
+                                                  : `/uploads/${request.car.images[0]}`}`)
+                                          : 'https://via.placeholder.com/96x64.png?text=No+Image')}
                                     alt={`${request.car.make} ${request.car.model}`}
                                     className="h-full w-full object-cover hover:scale-110 transition-transform duration-500" 
                                     onError={(e) => {
@@ -391,6 +397,12 @@ const JournalistDashboardPage = () => {
                                       e.target.src = 'https://via.placeholder.com/96x64.png?text=No+Image';
                                     }}
                                   />
+                                </div>
+                              ) : (
+                                <div className="w-12 h-12 rounded-full bg-theme-purple-900 flex items-center justify-center mr-4 text-white font-medium border-2 border-theme-purple-600">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
                                 </div>
                               )}
                               <div>
@@ -650,15 +662,20 @@ const JournalistDashboardPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {availableCars.map(car => (
                   <div key={car._id} className="bg-theme-black-800 rounded-lg overflow-hidden border border-theme-purple-600 shadow-purple-glow hover:shadow-purple-neon transition-all duration-300 transform hover:scale-102">
-                    <div className="h-48 overflow-hidden relative">
-                      <img 
-                        src={car.image ? (car.image.startsWith('http') 
-                           ? car.image 
-                           : car.image.startsWith('/uploads/')
-                             ? `http://localhost:5000${car.image}`
-                             : `http://localhost:5000/uploads/${car.image}`)
-                           : 'https://via.placeholder.com/400x200.png?text=No+Image'
-                        } 
+                    <div className="h-48 overflow-hidden relative">                      <img 
+                        src={car.image 
+                           ? (car.image.startsWith('http') 
+                              ? car.image 
+                              : `http://localhost:5000${car.image.startsWith('/uploads') 
+                                  ? car.image 
+                                  : `/uploads/${car.image}`}`) 
+                           : (car.images && car.images.length > 0 
+                              ? (car.images[0].startsWith('http')
+                                  ? car.images[0]
+                                  : `http://localhost:5000${car.images[0].startsWith('/uploads')
+                                      ? car.images[0]
+                                      : `/uploads/${car.images[0]}`}`)
+                              : 'https://via.placeholder.com/400x200.png?text=No+Image')}
                         alt={`${car.make} ${car.model}`}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
                         onError={(e) => {

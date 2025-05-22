@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchCarById } from '../services/carService'; 
-import { createTestDriveRequest, checkExistingRequest, withdrawTestDriveRequest } from '../services/requestService';
+import { checkExistingRequest, withdrawTestDriveRequest } from '../services/requestService';
 import { useAuth } from '../context/AuthContext';
 
 // Basic placeholder image URL
@@ -23,16 +23,14 @@ const CarDetailsPage = () => {
     const [requestLoading, setRequestLoading] = useState(false);
     const [requestError, setRequestError] = useState('');
     const [requestSuccess, setRequestSuccess] = useState('');
-    const [existingRequest, setExistingRequest] = useState(null);
-
-    // Helper function to process image URLs
+    const [existingRequest, setExistingRequest] = useState(null);    // Process image URL to handle both relative and absolute paths
     const processImageUrl = (imagePath) => {
         if (!imagePath) return placeholderImage;
         if (imagePath.startsWith('http')) return imagePath;
         
         // For backend paths that start with /uploads, prepend the backend URL
         return `http://localhost:5000${imagePath.startsWith('/uploads') ? imagePath : `/uploads/${imagePath}`}`;
-    };    useEffect(() => {
+    };useEffect(() => {
         const loadCarDetails = async () => {
             setLoading(true);
             setError('');
@@ -255,8 +253,7 @@ const CarDetailsPage = () => {
     return (
         <div className="bg-theme-black-900 bg-opacity-80 rounded-lg shadow-purple-glow overflow-hidden p-6 md:p-8 lg:p-10 border border-theme-purple-700 backdrop-blur-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Image Section */}                <div>
-                    <div className="relative overflow-hidden rounded-lg shadow-md mb-4 bg-theme-black-800 border border-theme-purple-600">
+                {/* Image Section */}                <div>                    <div className="relative overflow-hidden rounded-lg shadow-md mb-4 bg-theme-black-800 border border-theme-purple-600">
                         <img
                             src={currentImage || placeholderImage}
                             alt={`${car.make} ${car.model}`}
@@ -270,14 +267,14 @@ const CarDetailsPage = () => {
                     </div>
                     
                     {/* Image gallery */}
-                    {galleryImages.length > 0 && (
+                    {galleryImages.length > 1 && (
                         <div className="flex space-x-2 overflow-x-auto pb-2">
                             {galleryImages.map((img, index) => (
                                 <img
                                     key={index}
                                     src={img}
                                     alt={`${car.make} ${car.model} - View ${index + 1}`}
-                                    className={`h-16 w-auto rounded cursor-pointer transition-all duration-200 
+                                    className={`h-16 w-20 object-cover rounded cursor-pointer transition-all duration-200 
                                                ${currentImage === img 
                                                    ? 'opacity-100 border-2 border-theme-purple-500 shadow-purple-glow' 
                                                    : 'opacity-75 hover:opacity-100 border border-transparent hover:border-theme-purple-400'}`}
